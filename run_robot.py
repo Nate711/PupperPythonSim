@@ -48,8 +48,8 @@ def main():
     servo_params = ServoParams()
 
     # Create imu handle
-    imu = IMU(port="/dev/ttyACM0")
-    imu.flush_buffer()
+    #imu = IMU(port="/dev/ttyACM0")
+    #imu.flush_buffer()
 
     # Create controller and user input handles
     controller = Controller(robot_config)
@@ -94,7 +94,8 @@ def main():
             update_controller(controller, user_input, stay_go_sub)
 
             # Read imu data. Orientation will be None if no data was available
-            quat_orientation = imu.read_orientation()
+            #quat_orientation = imu.read_orientation()
+            quat_orientation = np.array([1, 0, 0, 0])
 
             # Step the controller forward by dt
             step_controller(controller, robot_config, quat_orientation)

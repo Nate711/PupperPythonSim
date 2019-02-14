@@ -75,7 +75,7 @@ class StanceParams:
         self.max_pitch_rate = 0.15
         self.roll_speed = 0.16  # maximum roll rate [rad/s]
         self.delta_x = 0.1
-        self.delta_y = 0.10
+        self.delta_y = 0.085
         self.x_shift = -0.01
 
     @property
@@ -100,7 +100,7 @@ class SwingParams:
 
     def __init__(self):
         self.z_coeffs = None
-        self.z_clearance = 0.05
+        self.z_clearance = 0.08
         self.alpha = (
             0.5  # Ratio between touchdown distance and total horizontal stance movement
         )
