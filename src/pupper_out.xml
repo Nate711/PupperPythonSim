@@ -22,7 +22,7 @@ _ext indicates linear extension of the leg. Positive values = leg goes up
 
 <default>
     <joint armature="0.01936" solimplimit="0.9 0.95 0.001" solreflimit="0.001 1" stiffness="0"/>
-    <geom conaffinity="0" condim="3" contype="1" friction="1.5 .1 .1" rgba="0.8 0.6 .4 1" solimp="0.9 0.95 0.001" solref="0.005 2"/>
+    <geom conaffinity="0" condim="3" contype="1" friction="1.5 .1 .1" rgba="0.8 0.6 .4 1" solimp="0.9 0.95 0.001" solref="0.01 1"/>
     <position forcelimited="true"/>
 </default>
 

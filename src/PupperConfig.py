@@ -4,7 +4,7 @@ from scipy.linalg import solve
 
 
 class MovementCommand:
-    """Stores movement commmand 
+    """Stores movement command 
     """
     def __init__(self):
         self.v_xy_ref = np.array([0, 0])
@@ -214,6 +214,6 @@ class SolverConfig:
         self.JOINT_SOLREF = "0.001 1"  # time constant and damping ratio for joints
         self.JOINT_SOLIMP = "0.9 0.95 0.001"  # joint constraint parameters
         self.GEOM_SOLREF = (
-            "0.005 2"
+            "0.01 1"
         )  # time constant and damping ratio for geom contacts
         self.GEOM_SOLIMP = "0.9 0.95 0.001"  # geometry contact parameters
