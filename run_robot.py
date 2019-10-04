@@ -6,7 +6,7 @@ from src.HardwareInterface import (
     PWMParams,
     ServoParams,
 )
-from src.Types import MovementReference, GaitParams, StanceParams, SwingParams
+from src.PupperConfig import MovementReference, GaitParams, StanceParams, SwingParams
 import time
 import numpy as np
 

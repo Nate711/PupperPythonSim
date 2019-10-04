@@ -1,7 +1,6 @@
 from src import PupperXMLParser
 from src.Controller import Controller, step_controller
-from src.Types import SwingParams
-from src.PupperConfig import PupperConfig, EnvironmentConfig, SolverConfig
+from src.PupperConfig import PupperConfig, EnvironmentConfig, SolverConfig, SwingParams
 import time
 import numpy as np
 from mujoco_py import load_model_from_path, MjSim, MjViewer, functions

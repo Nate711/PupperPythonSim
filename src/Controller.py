@@ -1,4 +1,4 @@
-from src.Types import SwingParams, StanceParams, GaitParams, MovementReference
+from src.PupperConfig import SwingParams, StanceParams, GaitParams, MovementReference
 from src.PupperConfig import PupperConfig
 from src.Gaits import contacts, subphase_time
 from src.Kinematics import four_legs_inverse_kinematics
@@ -25,7 +25,6 @@ class Controller:
         self.joint_angles = four_legs_inverse_kinematics(
             self.foot_locations, self.robot_config
         )
-        # print(self.joint_angles)
 
 
 def step(
