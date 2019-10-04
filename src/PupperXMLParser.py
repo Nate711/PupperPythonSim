@@ -2,6 +2,17 @@ import os
 
 
 def Parse(PUPPER_CONFIG, ENVIRONMENT_CONFIG, SOLVER_CONFIG):
+    """Replace the variable names in the placeholder XML robot file with actual values given from the configuration object parameters.
+    
+    Parameters
+    ----------
+    PUPPER_CONFIG : PupperConfig
+        Pupper configuration object.
+    ENVIRONMENT_CONFIG : EnvironmentConfig
+        MuJoCo environment configuration object.
+    SOLVER_CONFIG : SolverConfig
+        MuJoCo solver configuration object.
+    """
     # FILE PATHS
     dir_path = os.path.dirname(os.path.realpath(__file__))
     IN_FILE = os.path.join(dir_path, PUPPER_CONFIG.XML_IN)

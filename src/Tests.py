@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from Kinematics import leg_explicit_inverse_kinematics
 from PupperConfig import *
 from Gaits import *
-from StanceController import ski_increment, stance_foot_location
+from StanceController import position_delta, stance_foot_location
 from SwingLegController import *
 from Types import MovementReference, GaitParams, StanceParams, SwingParams
 from Controller import *
@@ -185,7 +185,7 @@ def test_stance_controller():
 
     zmeas = -0.20
     mvref = MovementReference()
-    dp, dR = ski_increment(zmeas, stanceparams, mvref, gaitparams)
+    dp, dR = position_delta(zmeas, stanceparams, mvref, gaitparams)
     assert np.linalg.norm(dR - np.eye(3)) < 1e-10
     assert np.linalg.norm(dp - np.array([0, 0, gaitparams.dt * 0.04])) < 1e-10
 
@@ -193,13 +193,13 @@ def test_stance_controller():
     mvref = MovementReference()
     mvref.v_xy_ref = np.array([1.0, 0.0])
     mvref.z_ref = -0.18
-    dp, dR = ski_increment(zmeas, stanceparams, mvref, gaitparams)
+    dp, dR = position_delta(zmeas, stanceparams, mvref, gaitparams)
 
     zmeas = -0.20
     mvref = MovementReference()
     mvref.wz_ref = 1.0
     mvref.z_ref = -0.20
-    dp, dR = ski_increment(zmeas, stanceparams, mvref, gaitparams)
+    dp, dR = position_delta(zmeas, stanceparams, mvref, gaitparams)
     assert np.linalg.norm(dp - np.array([0, 0, 0])) < 1e-10
     assert np.linalg.norm(dR[0, 1] - (gaitparams.dt)) < 1e-6
 

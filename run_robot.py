@@ -12,25 +12,25 @@ import numpy as np
 
 
 def loop(pi, pwm_params, servo_params, controller):
-    """[summary]
+    """Function that runs every
     
     Parameters
     ----------
-    pi : [type]
-        [description]
-    pwm_params : [type]
-        [description]
-    servo_params : [type]
-        [description]
-    controller : [type]
-        [description]
+    pi : PiGPIO.pi
+        Link to GPIO daemon socket
+    pwm_params : PWMParams
+        PWM Parameters
+    servo_params : ServoParams
+        Servo Parameters
+    controller : Controller
+        Controller object
     """
     step_controller(controller)
     send_servo_commands(pi, pwm_params, servo_params, controller.joint_angles)
 
 
 def main():
-    """[summary]
+    """Main program
     """
     pi_board = pigpio.pi()
     pwm_params = PWMParams()
