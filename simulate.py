@@ -39,9 +39,10 @@ viewer = MjViewer(sim)
 # Create pupper_controller
 pupper_controller = Controller()
 pupper_controller.movement_reference.v_xy_ref = np.array([0.2, 0.0])
-pupper_controller.movement_reference.wz_ref = -0.5
-pupper_controller.swing_params.z_clearance = 0.02
+pupper_controller.movement_reference.wz_ref = 0.0
+pupper_controller.swing_params.z_clearance = 0.03
 pupper_controller.gait_params.dt = 0.005
+pupper_controller.stance_params.delta_y = 0.12
 
 # Initialize joint angles
 sim.data.qpos[7:] = parallel_to_serial_joint_angles(

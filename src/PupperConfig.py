@@ -4,6 +4,8 @@ from scipy.linalg import solve
 
 
 class MovementCommand:
+    """Stores movement commmand 
+    """
     def __init__(self):
         self.v_xy_ref = np.array([0, 0])
         self.wz_ref = 0.0
@@ -11,6 +13,8 @@ class MovementCommand:
 
 
 class MovementReference:
+    """Stores movement reference
+    """
     def __init__(self):
         self.v_xy_ref = np.array([0, 0])
         self.wz_ref = 0.0
@@ -18,6 +22,8 @@ class MovementReference:
 
 
 class StanceParams:
+    """Stance parameters
+    """
     def __init__(self):
         self.z_time_constant = 1.0
         self.delta_x = 0.1
@@ -35,6 +41,8 @@ class StanceParams:
 
 
 class SwingParams:
+    """Swing Parameters
+    """
     def __init__(self):
         self.z_coeffs = None
         self.z_clearance = 0.01
@@ -66,6 +74,8 @@ class SwingParams:
 
 
 class GaitParams:
+    """Gait Parameters
+    """
     def __init__(self):
         self.dt = 0.01
         self.num_phases = 4
@@ -103,6 +113,8 @@ class GaitParams:
 
 
 class PupperConfig:
+    """Pupper hardware parameters
+    """
     def __init__(self):
         # XML files
         self.XML_IN = "pupper.xml"
@@ -151,14 +163,19 @@ class PupperConfig:
         self.LEG_MASS = 0.030  # kg
         self.MASS = self.FRAME_MASS + (self.MODULE_MASS + self.LEG_MASS) * 4
 
-        # Compensation factor of 2 because the inertia measurement was just
+        # Compensation factor of 3 because the inertia measurement was just
         # of the carbon fiber and plastic parts of the frame and did not
         # include the hip servos and electronics
         self.FRAME_INERTIA = tuple(
-            map(lambda x: 2.0 * x, (1.844e-4, 1.254e-3, 1.337e-3))
+            map(lambda x: 3.0 * x, (1.844e-4, 1.254e-3, 1.337e-3))
         )
         self.MODULE_INERTIA = (3.698e-5, 7.127e-6, 4.075e-5)
-        self.LEG_INERTIA = (2.253e-4, 6.493e-5, 2.502e-4)
+        
+        leg_z = 1e-6
+        leg_mass = 0.010
+        leg_x = 1 / 12 * self.LEG_L ** 2 * leg_mass
+        leg_y = leg_x
+        self.LEG_INERTIA = (leg_x, leg_y, leg_z)
 
         # Joint params
         G = 220  # Servo gear ratio
@@ -183,12 +200,16 @@ class PupperConfig:
 
 
 class EnvironmentConfig:
+    """Environmental parameters
+    """
     def __init__(self):
         self.MU = 1.5  # coeff friction
         self.DT = 0.001  # seconds between simulation steps
 
 
 class SolverConfig:
+    """MuJoCo solver parameters
+    """
     def __init__(self):
         self.JOINT_SOLREF = "0.001 1"  # time constant and damping ratio for joints
         self.JOINT_SOLIMP = "0.9 0.95 0.001"  # joint constraint parameters
