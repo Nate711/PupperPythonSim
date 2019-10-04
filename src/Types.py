@@ -69,7 +69,6 @@ class SwingParams:
             ]
         )
         self.z_coeffs = solve(A_z, b_z)
-        print(z, self.z_clearance)
 
 class GaitParams:
     def __init__(self):
