@@ -8,6 +8,11 @@ This repository contains Python code to run Pupper, a Raspberry Pi-based quadrup
 
 2. Follow the instructions at https://github.com/openai/mujoco-py to correctly install MuJoCo. 
 
+3. Install the python requirements:
+```bash
+bash install_packages_sim.sh
+```
+
 ## Run Simulation
 1. Run
 ```shell
