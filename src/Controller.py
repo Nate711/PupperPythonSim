@@ -9,6 +9,8 @@ import numpy as np
 
 
 class Controller:
+    """Controller and planner object
+    """
     def __init__(self):
         self.swing_params = SwingParams()
         self.stance_params = StanceParams()
@@ -30,27 +32,27 @@ class Controller:
 def step(
     ticks, foot_locations, swing_params, stance_params, gait_params, movement_reference
 ):
-    """[summary]
+    """Calculate the desired foot locations for the next timestep
     
     Parameters
     ----------
-    ticks : [type]
-        [description]
-    foot_locations : [type]
-        [description]
-    swing_params : [type]
-        [description]
-    stance_params : [type]
-        [description]
-    gait_params : [type]
-        [description]
-    movement_reference : [type]
-        [description]
+    ticks : int
+        Number of clock ticks since the start. Time between ticks is given my the gait params dt variable.
+    foot_locations : Numpy array (3, 4)
+        Locations of all four feet.
+    swing_params : SwingParams
+        Swing parameters object.
+    stance_params : StanceParams
+        Stance parameters object.
+    gait_params : GaitParams
+        Gait parameters object.
+    movement_reference : MovementReference
+        Movement reference object.
     
     Returns
     -------
-    [type]
-        [description]
+    Numpy array (3, 4)
+        Matrix of new foot locations.
     """
     contact_modes = contacts(ticks, gait_params)
     new_foot_locations = np.zeros((3, 4))
@@ -79,12 +81,12 @@ def step(
 
 
 def step_controller(controller):
-    """[summary]
+    """Steps the controller forward one timestep
     
     Parameters
     ----------
-    controller : [type]
-        [description]
+    controller : Controller
+        Robot controller object.
     """
     controller.foot_locations = step(
         controller.ticks,
@@ -101,12 +103,12 @@ def step_controller(controller):
 
 
 def run():
-    """[summary]
+    """Testing function that runs the robot for one second.
     
     Returns
     -------
-    [type]
-        [description]
+    (Numpy array (3, 4, timesteps), Numpy array (3, 4, timesteps))
+        (history of foot locations, history of joint angles)
     """
     c = Controller()
     c.movement_reference.v_xy_ref = np.array([0.2, 0.0])
