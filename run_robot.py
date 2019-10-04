@@ -8,11 +8,7 @@ from src.HardwareInterface import (
 )
 from src.Types import MovementReference, GaitParams, StanceParams, SwingParams
 import time
-
-# function loop(pi::Pi, pwmparams::PWMParams, servoparams, controller::Controller)
-#     stepcontroller!(controller)
-#     sendservocommands(pi, pwmparams, servoparams, controller.jointangles)
-# end
+import numpy as np
 
 
 def loop(pi, pwm_params, servo_params, controller):
@@ -31,34 +27,6 @@ def loop(pi, pwm_params, servo_params, controller):
     """
     step_controller(controller)
     send_servo_commands(pi, pwm_params, servo_params, controller.joint_angles)
-
-
-# function main()
-#     piboard = Pi()
-#     pwmparams = PWMParams()
-#     servoparams = ServoParams()
-
-#     controller = Controller()
-#     controller.mvref = MovementReference(vxyref=SVector(0.2,0.0), zref=-0.15, wzref=0.3)
-#     controller.swingparams = SwingParams(zclearance=0.02)
-#     controller.stanceparams = StanceParams(Δx=0.1, Δy=0.09)
-#     controller.gaitparams = GaitParams(dt=0.01)
-
-#     initializePWM(piboard, pwmparams)
-
-#     lastloop = Dates.Time(Dates.now())
-#     now = lastloop
-#     for i in 1:1000
-#         stepcontroller!(controller)
-#         sendservocommands(piboard, pwmparams, servoparams, controller.jointangles)
-
-#         while now - lastloop < Nanosecond(Int(round(1e9*controller.gaitparams.dt)))
-#             now = Dates.Time(Dates.now())
-#         end
-# 	    println("Since last loop: ", (now - lastloop))
-#         lastloop = now
-#     end
-# end
 
 
 def main():
@@ -88,3 +56,6 @@ def main():
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
         print("Time since last loop: ", now - last_loop)
+
+
+main()

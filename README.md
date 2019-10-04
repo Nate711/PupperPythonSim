@@ -8,6 +8,18 @@ This repository contains Python code to run Pupper, a Raspberry Pi-based quadrup
 
 2. Follow the instructions at https://github.com/openai/mujoco-py to correctly install MuJoCo. 
 
+If you have trouble installing MuJoCo because gcc can't find certain header files, like "limits.h" or "stdio.h", then try completing the installation wizard that pops up when you run:
+```shell
+sudo open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg 
+```
+And also do:
+```shell
+brew update
+brew install gcc@8
+brew link --overwrite gcc
+```
+
+
 3. Install the python requirements:
 ```bash
 bash install_packages_sim.sh

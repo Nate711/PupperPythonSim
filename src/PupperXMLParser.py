@@ -92,7 +92,6 @@ def Parse(PUPPER_CONFIG, ENVIRONMENT_CONFIG, SOLVER_CONFIG):
     filedata = filedata.replace("pupper_geom_solimp", str(pupper_geom_solimp))
 
     # Joint specs
-    filedata = filedata.replace("pupper_ext_range", str(pupper_ext_range))
     filedata = filedata.replace("pupper_joint_range", str(pupper_joint_range))
     filedata = filedata.replace("pupper_l2_joint_range", str(pupper_l2_joint_range))
     filedata = filedata.replace("pupper_rev_torque_range", str(pupper_rev_torque_range))
@@ -137,7 +136,3 @@ def Parse(PUPPER_CONFIG, ENVIRONMENT_CONFIG, SOLVER_CONFIG):
     # Write the xml file
     with open(OUT_FILE, "w") as file:
         file.write(filedata)
-
-
-Parse()
-print("DONE")

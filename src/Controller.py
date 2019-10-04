@@ -1,34 +1,11 @@
-# using StaticArrays
-
-# include("Types.jl")
-# include("Gait.jl")
-# include("StanceController.jl")
-# include("SwingLegController.jl")
-# include("Kinematics.jl")
-# include("PupperConfig.jl")
-
-from Types import SwingParams, StanceParams, GaitParams, MovementReference
-from PupperConfig import PupperConfig
-from Gaits import contacts, subphase_time
-from Kinematics import four_legs_inverse_kinematics
-from StanceController import stance_foot_location
-from SwingLegController import swing_foot_location
+from src.Types import SwingParams, StanceParams, GaitParams, MovementReference
+from src.PupperConfig import PupperConfig
+from src.Gaits import contacts, subphase_time
+from src.Kinematics import four_legs_inverse_kinematics
+from src.StanceController import stance_foot_location
+from src.SwingLegController import swing_foot_location
 
 import numpy as np
-
-
-# @with_kw mutable struct Controller
-#     swingparams::SwingParams = SwingParams()
-#     stanceparams::StanceParams = StanceParams()
-#     gaitparams::GaitParams = GaitParams()
-#     mvref::MovementReference = MovementReference(vxyref=SVector{2}(0.0, 0.0), wzref=0.0, zref=-0.18)
-#     conparams::ControllerParams = ControllerParams()
-#     robotconfig::PupperConfig = PupperConfig()
-#     ticks::Int = 0
-
-#     footlocations::SMatrix{3, 4, Float64, 12} = stanceparams.defaultstance .+ SVector{3, Float64}(0, 0, mvref.zref)
-#     jointangles::SMatrix{3, 4, Float64, 12} = fourlegs_inversekinematics(footlocations, robotconfig)
-# end
 
 
 class Controller:
@@ -48,34 +25,7 @@ class Controller:
         self.joint_angles = four_legs_inverse_kinematics(
             self.foot_locations, self.robot_config
         )
-
-
-# function step(ticks::Integer, footlocations::SMatrix{3, 4, Float64}, swingparams::SwingParams, stanceparams::StanceParams, gaitparams::GaitParams, mvref::MovementReference, conparams::ControllerParams)
-#     #=
-#     Return the foot locations for the next timestep.
-#     Allocation-free.
-
-#     ticks: Time since the system started
-#     footlocations:: SMatrix
-#     =#
-
-#     contactmodes = contacts(ticks, gaitparams)
-#     for legindex in 1:4
-#         contactmode = contactmodes[legindex]
-#         footloc = SVector{3}(footlocations[:, legindex])
-#         if contactmode == 1
-#             newloc = stancefootlocation(footloc, stanceparams, gaitparams, mvref)
-#         else
-#             swingprop::Float64 = subphasetime(ticks, gaitparams) / gaitparams.swingticks
-#             newloc = swingfootlocation(swingprop, footloc, legindex, swingparams, stanceparams, gaitparams, mvref)
-#         end
-
-#         for j in 1:3
-#             footlocations = setindex(footlocations, newloc[j], LinearIndices(footlocations)[j, legindex])
-#         end
-#     end
-#     return footlocations
-# end
+        # print(self.joint_angles)
 
 
 def step(
@@ -104,8 +54,6 @@ def step(
         [description]
     """
     contact_modes = contacts(ticks, gait_params)
-    print(ticks, contact_modes)
-    print("")
     new_foot_locations = np.zeros((3, 4))
     for leg_index in range(4):
         contact_mode = contact_modes[leg_index]
@@ -131,13 +79,6 @@ def step(
     return new_foot_locations
 
 
-# function stepcontroller!(c::Controller)
-#     c.footlocations = step(c.ticks, c.footlocations, c.swingparams, c.stanceparams, c.gaitparams, c.mvref, c.conparams)
-#     c.jointangles = fourlegs_inversekinematics(c.footlocations, c.robotconfig)
-#     c.ticks += 1
-# end
-
-
 def step_controller(controller):
     """[summary]
     
@@ -158,25 +99,6 @@ def step_controller(controller):
         controller.foot_locations, controller.robot_config
     )
     controller.ticks += 1
-
-
-# function run()
-#     c = Controller()
-#     c.mvref = MovementReference(vxyref=SVector{2}(0.2, 0.0), wzref=0.5)
-
-#     tf = 6.0
-#     timesteps = Int(tf / (c.gaitparams.dt))
-
-#     footlochistory = zeros(3, 4, timesteps)
-#     jointanglehistory = zeros(3, 4, timesteps)
-
-#     for i in 1:timesteps
-#         stepcontroller!(c)
-#         footlochistory[:, :, i] = c.footlocations
-#         jointanglehistory[:, :, i] = c.jointangles
-#     end
-#     return footlochistory, jointanglehistory
-# end
 
 
 def run():
