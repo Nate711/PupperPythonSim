@@ -38,8 +38,8 @@ _ext indicates linear extension of the leg. Positive values = leg goes up
 <size nstack="300000" nuser_geom="1"/>
 
 <!-- Took out gravity="0 0 -9.81" term-->
-<option timestep="0.001"/>
-<!-- <option gravity="0 0 0" timestep="0.001"/> -->
+<option timestep="0.0042"/>
+<!-- <option gravity="0 0 0" timestep="0.0042"/> -->
 <asset>
     <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
     <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>

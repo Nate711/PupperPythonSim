@@ -54,35 +54,38 @@ pupper_controller = Controller()
 pupper_controller.movement_reference.v_xy_ref = np.array([0.0, 0.0])
 pupper_controller.movement_reference.wz_ref = 0.0
 pupper_controller.swing_params.z_clearance = 0.03
-pupper_controller.gait_params.dt = 0.005
+pupper_controller.gait_params.dt = 0.02
 pupper_controller.stance_params.delta_y = 0.09
 
 # Run the simulation
 timesteps = 60000
 
-# Calculate how many simulation steps to make for every controller update
-pupper_update_rate = int(
-    1.0 / pupper_controller.gait_params.dt
-)  # control rate, updates per second
-sim_rate = int(1 / ENVIRONMENT_CONFIG.DT)  # simulation updates per second
-sim_steps_per_control_step = int(sim_rate / pupper_update_rate)
-
+start = time.time()
+last_control_update = time.time()
 for i in range(timesteps):
     # Step the pupper controller forward
-    if i % sim_steps_per_control_step == 0:
+    current_time = time.time()
+    if current_time - last_control_update > pupper_controller.gait_params.dt:
+        last_control_update = current_time
+
+        now = time.time()
         # step_controller takes between 0.3ms and 1ms to complete! Definitely fast enough!
         step_controller(pupper_controller)
         serial_joint_angles = parallel_to_serial_joint_angles(pupper_controller.joint_angles)
-
+        t2 = time.time()
         p.setJointMotorControlArray(
             bodyUniqueId=pupperId[1],
             jointIndices=joint_indices,
             controlMode=p.POSITION_CONTROL,
             targetPositions=list(serial_joint_angles.T.reshape(12)),
-         # positionGains=[1]*12,
-         # velocityGains=[1]*12,
+            # positionGains=[1]*12,
+            # velocityGains=[1]*12,
             forces=[2]*12,
         )
+        print(t2-now, ",", time.time()-t2)
 
     p.stepSimulation()
-    time.sleep(ENVIRONMENT_CONFIG.DT)
+    # time.sleep(ENVIRONMENT_CONFIG.DT)
+
+    elapsed = time.time() - start
+    print(1 / (time.time() - current_time))
