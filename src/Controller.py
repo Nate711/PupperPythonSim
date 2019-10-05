@@ -11,6 +11,7 @@ import numpy as np
 class Controller:
     """Controller and planner object
     """
+
     def __init__(self):
         self.swing_params = SwingParams()
         self.stance_params = StanceParams()
