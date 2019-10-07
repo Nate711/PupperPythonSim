@@ -49,13 +49,15 @@ def main():
 
     last_loop = time.time()
     now = last_loop
+    start = time.time()
     for i in range(1000):
+        last_loop = time.time()
         step_controller(controller)
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
 
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
-        print("Time since last loop: ", now - last_loop)
-
-
+        #print("Time since last loop: ", now - last_loop)
+    end = time.time()
+    print("seconds per loop: ", (end-start)/1000.0)
 main()
