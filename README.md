@@ -1,14 +1,37 @@
-# Pupper Julia Simulation
+# Pupper Robot: Python Simulation
 
 ## Overview
 This repository contains Python code to run Pupper, a Raspberry Pi-based quadruped robot. In addition to the robot code, this repository also contains a wrapper to simulate the robot in MuJoCo using the same code that runs on the robot.
 
-## Installation for Simulation
+## Installation for PyBullet Simulation
+The PyBullet simulator is free for academic use and requires no license whatsoever, but in my experience PyBullet is much slower than MuJoCo and is less clear about how to tune the contact parameters.
+
+0. Clone this repository
+```shell
+git clone https://github.com/Nate711/PupperSimulation.git
+```
+1. Install pybullet (in a python 3.7 environment)
+```shell
+pip install pybullet
+```
+## Run PyBullet Simulation
+1. Run simulation:
+```shell
+python3 simulate_pybullet.py
+```
+
+## Installation for MuJoCo Simulation
+MuJoCo has been faster than PyBullet in my experience, but requires that you request and activate a license. The process to acquire a license can take several days.
+
+0. Clone this repository
+```shell
+git clone https://github.com/Nate711/PupperSimulation.git
+```
 1. Acquire a license for MuJoCo at http://mujoco.org/. You can get a free trial of the professional license for a month, or with a student account, a free year.
 
 2. Follow the instructions at https://github.com/openai/mujoco-py to correctly install MuJoCo. 
 
-If you have trouble installing MuJoCo because gcc can't find certain header files, like "limits.h" or "stdio.h", then try completing the installation wizard that pops up when you run:
+If you have trouble installing MuJoCo on macOS because gcc can't find certain header files, like "limits.h" or "stdio.h", then try completing the installation wizard that pops up when you run:
 ```shell
 sudo open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg 
 ```
@@ -25,7 +48,7 @@ brew link --overwrite gcc
 bash install_packages_sim.sh
 ```
 
-## Run Simulation
+## Run MuJoCo Simulation
 1. Run
 ```shell
 python3 simulate.py
