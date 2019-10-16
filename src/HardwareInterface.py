@@ -34,7 +34,7 @@ class ServoParams:
 
 
 def pwm_to_duty_cycle(pulsewidth_micros, pwm_params):
-    return int(pulsewidth_micros / 1e6 * pwm_params.freq * pwmparams.range)
+    return int(pulsewidth_micros / 1e6 * pwm_params.freq * pwm_params.range)
 
 
 def angle_to_pwm(angle, servo_params, axis_index, leg_index):
