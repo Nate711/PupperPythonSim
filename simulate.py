@@ -4,6 +4,7 @@ from src.PupperConfig import PupperConfig, EnvironmentConfig, SolverConfig, Swin
 import time
 import numpy as np
 from mujoco_py import load_model_from_path, MjSim, MjViewer, functions
+from src.HardwareInterface import ServoParams, PWMParams, angle_to_pwm
 
 
 def parallel_to_serial_joint_angles(joint_matrix):
@@ -51,6 +52,10 @@ sim.data.qpos[7:] = parallel_to_serial_joint_angles(
 # Set the robot to be above the floor to begin with
 sim.data.qpos[2] = 0.5
 
+# Initialize pwm and servo params
+pwm_params = PWMParams()
+servo_params = ServoParams()
+
 # Run the simulation
 timesteps = 60000
 
@@ -68,6 +73,19 @@ for i in range(timesteps):
     if i % sim_steps_per_control_step == 0:
         # step_controller takes between 0.3ms and 1ms to complete! Definitely fast enough!
         step_controller(pupper_controller)
+
+        # calculate theoretical pwm values
+        pwm_commands = np.zeros((3, 4))
+        for axis in range(3):
+            for leg in range(4):
+                pwm_commands[axis, leg] = angle_to_pwm(
+                    pupper_controller.joint_angles[axis, leg], servo_params, axis, leg
+                )
+        print("Joint Angles: ")
+        print(pupper_controller.joint_angles)
+        print("Servo Pulse Width (uS): ")
+        print(pwm_commands)
+        print("")
 
         # Convert from joint angles meant for a parallel linkage to the serial linkage implemented in Mujoco
         sim.data.ctrl[:] = parallel_to_serial_joint_angles(

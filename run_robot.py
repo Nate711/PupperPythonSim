@@ -11,24 +11,6 @@ import time
 import numpy as np
 
 
-def loop(pi, pwm_params, servo_params, controller):
-    """Function that runs every
-    
-    Parameters
-    ----------
-    pi : PiGPIO.pi
-        Link to GPIO daemon socket
-    pwm_params : PWMParams
-        PWM Parameters
-    servo_params : ServoParams
-        Servo Parameters
-    controller : Controller
-        Controller object
-    """
-    step_controller(controller)
-    send_servo_commands(pi, pwm_params, servo_params, controller.joint_angles)
-
-
 def main():
     """Main program
     """
@@ -57,7 +39,9 @@ def main():
 
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
-        #print("Time since last loop: ", now - last_loop)
+        # print("Time since last loop: ", now - last_loop)
     end = time.time()
-    print("seconds per loop: ", (end-start)/1000.0)
+    print("seconds per loop: ", (end - start) / 1000.0)
+
+
 main()
