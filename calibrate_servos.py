@@ -17,10 +17,10 @@ def main():
     initialize_pwm(pi_board, pwm_params)
 
     servo_params.neutral_angle_degrees = np.array(
-        [[0, 0, 0, 0], [45, 45, 45, 45], [-45, -45, -45, -45]]
+        [[7, 5, 0, 0], [45, 48, 45, 45], [-50, -38, -45, -45]]
     )
 
-    ref_position = servo_params.neutral_angles
+    ref_position = np.pi/180.0 * np.array([[-30, 30, 0, 0], [90, 90, 45, 45], [-45,-45, -45, -45]])
     send_servo_commands(pi_board, pwm_params, servo_params, ref_position)
 
 

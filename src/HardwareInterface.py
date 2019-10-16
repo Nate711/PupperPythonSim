@@ -3,7 +3,7 @@ import numpy as np
 
 class PWMParams:
     def __init__(self):
-        self.pins = np.array([[2, 17, 1, 1], [3, 27, 1, 1], [4, 22, 1, 1]])
+        self.pins = np.array([[2, 17, 23, 23], [3, 27, 23, 23], [4, 22, 23, 23]])
         self.range = 4000
         self.freq = 250
         self.min = 800
@@ -21,11 +21,15 @@ class PWMParams:
 class ServoParams:
     def __init__(self):
         self.neutral_position_pwm = 1500  # Middle position
-        self.micros_per_rad = 1000.0 / (100.0 / 180.0 * np.pi)  # Must be calibrated
+        self.micros_per_rad = 1000.0 / (90.0 / 180.0 * np.pi)  # Must be calibrated
 
         # The neutral angle of the joint relative to the modeled zero-angle in degrees, for each joint
         self.neutral_angle_degrees = np.array(
-            [[0, 0, 0, 0], [45, 45, 45, 45], [-45, -45, -45, -45]]
+            [[7, 5, 0, 0], [45, 48, 45, 45], [-50, -38, -45, -45]]
+        )
+	
+        self.servo_multipliers = np.array(
+            [[1, 1, 1, 1], [-1, 1, 1, -1], [1, -1, 1, -1]]
         )
 
     @property
@@ -38,7 +42,7 @@ def pwm_to_duty_cycle(pulsewidth_micros, pwm_params):
 
 
 def angle_to_pwm(angle, servo_params, axis_index, leg_index):
-    angle_deviation = angle - servo_params.neutral_angles[axis_index, leg_index]
+    angle_deviation = (angle - servo_params.neutral_angles[axis_index, leg_index]) * servo_params.servo_multipliers[axis_index, leg_index]
     pulse_width_micros = (
         servo_params.neutral_position_pwm + servo_params.micros_per_rad * angle_deviation
     )
