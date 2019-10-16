@@ -21,12 +21,12 @@ def main():
 
     controller = Controller()
     controller.movement_reference = MovementReference()
-    controller.movement_reference.v_xy_ref = np.array([0.25, 0.15])
+    controller.movement_reference.v_xy_ref = np.array([0.0, 0.15])
     controller.movement_reference.wz_ref = 0
     controller.swing_params = SwingParams()
     controller.swing_params.z_clearance = 0.02
     controller.stance_params = StanceParams()
-    controller.stance_params.delta_y = 0.09
+    controller.stance_params.delta_y = 0.06
     controller.gait_params = GaitParams()
     controller.gait_params.dt = 0.01
 
