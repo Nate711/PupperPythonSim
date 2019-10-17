@@ -78,7 +78,7 @@ python3 simulate.py
         uname -r
         ```
 - Get the Pupper Code
-    - Clone the Pupper repository https://github.com/Nate711/PupperSimulation
+    - Clone the Pupper repository https://github.com/Nate711/PupperPythonSim/
     - Install requirements:
     ```shell
     bash install_packages_robot.sh
