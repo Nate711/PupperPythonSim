@@ -29,7 +29,7 @@ def getUserInput(request):
     return measured_angle
 
 
-def calibrateK(servo_params):
+def calibrateK(servo_params, pi_board, pwm_params):
     k = np.zeros((3, 4))
     b = np.zeros((3, 4))
     offset1 = 500
@@ -39,19 +39,20 @@ def calibrateK(servo_params):
         for i in range(3):
             motor_name = getMotorName(i, j)
             print("Currently calibrating " + motor_name)
-            motor_instructions = np.full((3, 4), 1500)
+            motor_instructions = np.full((3, 4), servo_base)
 
             # set to 1500 + some offset
-            motor_instructions[i][j] = offset1
-            pwm_to_duty_cycle(motor_instructions)
+            motor_instructions[i][j] = servo_base + offset1
+            doty = pwm_to_duty_cycle(motor_instructions[i][j], pwm_params)
+            pi_board.set_PWM_dutycycle(pwm_params.pins[i, j], doty)
 
             #user measures robot angle
             angle1 = getUserInput("Please measure the angle of the joint for " + motor_name)
 
             #set to 1500 + some other offset
-            motor_instructions[i][j] = offset2
-            pwm_to_duty_cycle(motor_instructions)
-
+            motor_instructions[i][j] = servo_base + offset2
+            dty = pwm_to_duty_cycle(motor_instructions[i, j], pwm_params)
+            pi_board.set_PWM_dutycycle(pwm_params.pins[i, j], dty)
             #user measures again
             angle2 = getUserInput("Please measure the angle of the joint for " + motor_name)
 
@@ -59,6 +60,9 @@ def calibrateK(servo_params):
 
             k[i][j] = (offset2 - offset1) / (s * angle1 - s * angle2)
             b[i][j] = (offset1 - s * angle1 * k[i][j]) / k[i][j]
+
+            print("k: " + "[" + str(i) + " " + str(j) + "]", k[i,j])
+            print("b: " + "[" + str(i) + " " + str(j) + "]", b[i,j])
 
     return k, b
 
@@ -70,7 +74,7 @@ def main():
     pwm_params = PWMParams()
     servo_params = ServoParams()
     initialize_pwm(pi_board, pwm_params)
-    new_servo_multiplier, new_neutral_angle_degrees = calibrateK(servo_params)
+    new_servo_multiplier, new_neutral_angle_degrees = calibrateK(servo_params, pi_board, pwm_params)
 
     servo_params.neutral_angle_degrees = new_neutral_angle_degrees
     servo_params.micros_per_rad = new_servo_multiplier[0]
