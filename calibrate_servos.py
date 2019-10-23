@@ -11,8 +11,8 @@ import numpy as np
 def getMotorName(i, j):
     motor_type = {
         0: "Abduction",
-        1: "Top",
-        2: "Bottom"
+        1: "Inner", #Top
+        2: "Outer" #Bottom
     }
     leg_pos = {
         0: "Front Right",
@@ -23,11 +23,14 @@ def getMotorName(i, j):
     final_name = motor_type[i] + " " + leg_pos[j]
     return final_name
 
-
+def getMotorSetPoint(i, j):
+    [[0, 0, 0, 0], [45, 45, 45, 45], [45, 45, 45, 45]]
 def getUserInput(request):
-    measured_angle = int(input(request))
+    measured_angle = float(input(request))
     return measured_angle
 
+def degreesToRadians(input_array):
+    return (np.pi/180.0 * input_array)
 
 def calibrateK(servo_params, pi_board, pwm_params):
     k = np.zeros((3, 4))
@@ -65,6 +68,44 @@ def calibrateK(servo_params, pi_board, pwm_params):
             print("b: " + "[" + str(i) + " " + str(j) + "]", b[i,j])
 
     return k, b
+
+def stepInDirection(servo_params, pi_board, pwm_params, kValue, direction=True):
+    #step in user-defined direction (True for positive, False for negative)
+def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index):
+    #returns the (program_angle) once the real angle matches the pre-defined set point
+    foundPosition = False
+    zero_neutral = np.zeros(3, 4)
+    
+    set_names = ["horizontal", "horizontal", "vertical"]
+    setPointName = set_names[i_index]
+    set_point = getMotorSetPoint(i, j)
+
+    while not foundPosition:
+        aboveOrBelow = str(input("is the leg above or below the set point of "))
+
+def calibrateB(servo_params, pi_board, pwm_params):
+    #Found K value of (11.4)
+    kValue = getUserInput("Please provide a K value for your servos: ")
+    
+    beta_values = np.zeros((3, 4))
+    
+    servo_params.neutral_angle_degrees = zero_neutral
+    
+    for j in range(4):
+        for i in range(3):
+            motor_name = getMotorName(i, j)
+            print("Currently calibrating " + motor_name + "...")
+
+            
+            
+            
+
+
+
+    #(real_angle) = s*(program_angle) - (beta)
+    #(beta) = s*(program_angle) - (real_angle)
+
+    
 
 
 def main():
