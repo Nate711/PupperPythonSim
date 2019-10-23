@@ -21,7 +21,7 @@ class PWMParams:
 class ServoParams:
     def __init__(self):
         self.neutral_position_pwm = 1500  # Middle position
-        self.micros_per_rad = 1000.0 / (90.0 / 180.0 * np.pi)  # Must be calibrated
+        self.micros_per_rad = 11.4 * 180.0 / np.pi  # Must be calibrated
 
         # The neutral angle of the joint relative to the modeled zero-angle in degrees, for each joint
         self.neutral_angle_degrees = np.array(
@@ -75,3 +75,10 @@ def send_servo_commands(pi, pwm_params, servo_params, joint_angles):
                 leg_index,
             )
             pi.set_PWM_dutycycle(pwm_params.pins[axis_index, leg_index], duty_cycle)
+
+
+def send_servo_command(pi, pwm_params, servo_params, joint_angle, axis, leg):
+    duty_cycle = angle_to_duty_cycle(
+        joint_angle, pwm_params, servo_params, axis, leg
+    )
+    pi.set_PWM_dutycycle(pwm_params.pins[axis, leg], duty_cycle)
