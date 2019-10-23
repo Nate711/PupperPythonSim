@@ -28,7 +28,7 @@ def getMotorName(i, j):
 
 def getMotorSetPoint(i, j):
     data = [[0, 0, 0, 0], [45, 45, 45, 45], [45, 45, 45, 45]]
-    return data[i, j]
+    return data[i][j]
 
 
 def getUserInput(request):
@@ -90,13 +90,13 @@ def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index, set_
 
     while not foundPosition:
         aboveOrBelow = str(input("is the leg 'above' or 'below' " + setPointName))
-        if aboveOrBelow == "above":
-            calibrated_setpoint += degreesToRadians(1.0)
-            send_servo_command(pi_board, pwm_params, servo_params, calibrated_setpoint, i, j)
-        elif aboveOrBelow == "below":
-            calibrated_setpoint -= degreesToRadians(1.0)
-            send_servo_command(pi_board, pwm_params, servo_params, calibrated_setpoint, i, j)
-        else:
+        if aboveOrBelow == "above" or aboveOrBelow == "a":
+            calibrated_setpoint += 1.0
+            send_servo_command(pi_board, pwm_params, servo_params, degreesToRadians(calibrated_setpoint), i_index, j_index)
+        elif aboveOrBelow == "below" or aboveOrBelow == "b":
+            calibrated_setpoint -= 1.0
+            send_servo_command(pi_board, pwm_params, servo_params, degreesToRadians(calibrated_setpoint), i_index, j_index)
+        elif aboveOrBelow == "done" or "d":
             foundPosition = True
         print("calibrated: ", calibrated_setpoint, " orig: ", set_point)
     
@@ -120,7 +120,7 @@ def calibrateB(servo_params, pi_board, pwm_params):
             set_point = getMotorSetPoint(i, j)
 
             # move servo to set_point angle
-            send_servo_command(pi_board, pwm_params, servo_params, set_point, i, j)
+            send_servo_command(pi_board, pwm_params, servo_params, degreesToRadians(set_point), i, j)
             # stepuntil we like it
 
             offset = stepUntil(servo_params, pi_board, pwm_params, kValue, i, j, set_point)
