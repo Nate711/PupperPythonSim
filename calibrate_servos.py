@@ -78,10 +78,11 @@ def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index):
     
     set_names = ["horizontal", "horizontal", "vertical"]
     setPointName = set_names[i_index]
-    set_point = getMotorSetPoint(i, j)
+
+    
 
     while not foundPosition:
-        aboveOrBelow = str(input("is the leg above or below the set point of "))
+        aboveOrBelow = str(input("is the leg above or below " + setPointName))
 
 def calibrateB(servo_params, pi_board, pwm_params):
     #Found K value of (11.4)
@@ -95,6 +96,7 @@ def calibrateB(servo_params, pi_board, pwm_params):
         for i in range(3):
             motor_name = getMotorName(i, j)
             print("Currently calibrating " + motor_name + "...")
+            set_point = getMotorSetPoint(i, j)
 
             
             
