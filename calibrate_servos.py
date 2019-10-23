@@ -4,9 +4,11 @@ from src.HardwareInterface import (
     initialize_pwm,
     PWMParams,
     ServoParams,
-    pwm_to_duty_cycle
+    pwm_to_duty_cycle,
+    send_servo_command
 )
 import numpy as np
+
 
 def getMotorName(i, j):
     motor_type = {
@@ -23,14 +25,20 @@ def getMotorName(i, j):
     final_name = motor_type[i] + " " + leg_pos[j]
     return final_name
 
+
 def getMotorSetPoint(i, j):
-    [[0, 0, 0, 0], [45, 45, 45, 45], [45, 45, 45, 45]]
+    data = [[0, 0, 0, 0], [45, 45, 45, 45], [45, 45, 45, 45]]
+    return data[i, j]
+
+
 def getUserInput(request):
     measured_angle = float(input(request))
     return measured_angle
 
+
 def degreesToRadians(input_array):
     return (np.pi/180.0 * input_array)
+
 
 def calibrateK(servo_params, pi_board, pwm_params):
     k = np.zeros((3, 4))
@@ -69,28 +77,41 @@ def calibrateK(servo_params, pi_board, pwm_params):
 
     return k, b
 
-def stepInDirection(servo_params, pi_board, pwm_params, kValue, direction=True):
-    #step in user-defined direction (True for positive, False for negative)
-def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index):
+
+def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index, set_point):
     #returns the (program_angle) once the real angle matches the pre-defined set point
+    
     foundPosition = False
-    zero_neutral = np.zeros(3, 4)
     
     set_names = ["horizontal", "horizontal", "vertical"]
     setPointName = set_names[i_index]
 
-    
+    calibrated_setpoint = set_point
 
     while not foundPosition:
-        aboveOrBelow = str(input("is the leg above or below " + setPointName))
+        aboveOrBelow = str(input("is the leg 'above' or 'below' " + setPointName))
+        if aboveOrBelow == "above":
+            calibrated_setpoint += degreesToRadians(1.0)
+            send_servo_command(pi_board, pwm_params, servo_params, calibrated_setpoint, i, j)
+        elif aboveOrBelow == "below":
+            calibrated_setpoint -= degreesToRadians(1.0)
+            send_servo_command(pi_board, pwm_params, servo_params, calibrated_setpoint, i, j)
+        else:
+            foundPosition = True
+        print("calibrated: ", calibrated_setpoint, " orig: ", set_point)
+    
+    return calibrated_setpoint - set_point
+
+
 
 def calibrateB(servo_params, pi_board, pwm_params):
     #Found K value of (11.4)
-    kValue = getUserInput("Please provide a K value for your servos: ")
+    kValue = getUserInput("Please provide a K value (microseconds per degree) for your servos: ")
+    servo_params.micros_per_rad = kValue * 180/np.pi
     
     beta_values = np.zeros((3, 4))
     
-    servo_params.neutral_angle_degrees = zero_neutral
+    servo_params.neutral_angle_degrees = np.zeros((3, 4))
     
     for j in range(4):
         for i in range(3):
@@ -98,11 +119,15 @@ def calibrateB(servo_params, pi_board, pwm_params):
             print("Currently calibrating " + motor_name + "...")
             set_point = getMotorSetPoint(i, j)
 
-            
-            
-            
+            # move servo to set_point angle
+            send_servo_command(pi_board, pwm_params, servo_params, set_point, i, j)
+            # stepuntil we like it
 
-
+            offset = stepUntil(servo_params, pi_board, pwm_params, kValue, i, j, set_point)
+            print("Final offset: ", offset)
+            beta_values[i, j] += set_point + offset
+            print("New neutral angles: ", beta_values)
+    return beta_values
 
     #(real_angle) = s*(program_angle) - (beta)
     #(beta) = s*(program_angle) - (real_angle)
@@ -117,11 +142,12 @@ def main():
     pwm_params = PWMParams()
     servo_params = ServoParams()
     initialize_pwm(pi_board, pwm_params)
-    new_servo_multiplier, new_neutral_angle_degrees = calibrateK(servo_params, pi_board, pwm_params)
+    # new_servo_multiplier, new_neutral_angle_degrees = calibrateK(servo_params, pi_board, pwm_params)
 
-    servo_params.neutral_angle_degrees = new_neutral_angle_degrees
-    servo_params.micros_per_rad = new_servo_multiplier[0]
+    # servo_params.neutral_angle_degrees = new_neutral_angle_degrees
+    # servo_params.micros_per_rad = new_servo_multiplier[0]
 
+    calibrateB(servo_params, pi_board, pwm_params)
     """
     servo_params.neutral_angle_degrees = np.array(
         [[8, 3, 0, 0], [45, 48, 45, 45], [-50, -38, -45, -45]]
@@ -135,6 +161,6 @@ def main():
 
 main()
 
-self.servo_multipliers = np.array(
-    [[1, 1, 1, 1], [-1, 1, 1, -1], [1, -1, 1, -1]]
-)
+# self.servo_multipliers = np.array(
+#     [[1, 1, 1, 1], [-1, 1, 1, -1], [1, -1, 1, -1]]
+# )
