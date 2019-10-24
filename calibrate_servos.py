@@ -95,9 +95,15 @@ def calibrateB(servo_params, pi_board, pwm_params):
                 servo_params, pi_board, pwm_params, kValue, i, j, set_point
             )
             print("Final offset: ", offset)
-            beta_values[i, j] += set_point + offset
-            print("New neutral angles: ", beta_values)
-    return beta_values
+            # The original line below is actually incorrect. Let's talk about it later, hard to explain in words
+            # The actual lines should be something like:
+            # if i == 2:
+            #     offset = 90 - offset
+            # beta_values[i, j] = default_offset + offset
+            #beta_values[i, j] += set_point + offset
+            #print("New neutral angles: ", beta_values)
+
+    # return beta_values
 
     # (real_angle) = s*(program_angle) - (beta)
     # (beta) = s*(program_angle) - (real_angle)
