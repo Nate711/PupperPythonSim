@@ -3,7 +3,7 @@ import numpy as np
 
 class PWMParams:
     def __init__(self):
-        self.pins = np.array([[2, 17, 23, 23], [3, 27, 23, 23], [4, 22, 23, 23]])
+        self.pins = np.array([[2, 17, 21, 6], [3, 27, 16, 5], [4, 22, 20, 12]])
         self.range = 4000
         self.freq = 250
         self.min = 800
