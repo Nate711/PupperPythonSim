@@ -61,7 +61,7 @@ def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index, set_
                 i_index,
                 j_index,
             )
-        elif aboveOrBelow == "done" or "d":
+        elif aboveOrBelow == "done" or aboveOrBelow == "d":
             foundPosition = True
         print("offset: ", offset, " original: ", set_point)
 
