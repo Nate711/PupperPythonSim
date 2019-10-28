@@ -39,7 +39,7 @@ def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index, set_
 
     while not foundPosition:
         aboveOrBelow = str(
-            input("Is the leg 'above' or 'below' " + set_names[i_index], "? Input: ")
+            input("Is the leg 'above' or 'below' " + set_names[i_index]+ "? Input: ")
         )
         if aboveOrBelow == "above" or aboveOrBelow == "a":
             offset += 1.0
@@ -70,7 +70,7 @@ def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index, set_
 
 def calibrateB(servo_params, pi_board, pwm_params):
     """Calibrate the angle offset for the twelve motors on the robot. Note that servo_params is modified in-place.
-    
+
     Parameters
     ----------
     servo_params : ServoParams
@@ -116,17 +116,17 @@ def calibrateB(servo_params, pi_board, pwm_params):
 
                 # The upper leg link has a different equation because we're calibrating to make it horizontal, not vertical
                 if i == 1:
-                    servo_params.neutral_angles_degrees[i, j] = set_point + offset
+                    servo_params.neutral_angle_degrees[i, j] = set_point - offset
                 else:
-                    servo_params.neutral_angles_degrees[i, j] = -(set_point + offset)
-                print("New beta angle: ", servo_params.neutral_angles_degrees[i, j])
+                    servo_params.neutral_angle_degrees[i, j] = -(set_point + offset)
+                print("New beta angle: ", servo_params.neutral_angle_degrees[i, j])
 
                 # Send the servo command using the new beta value and check that it's ok
                 send_servo_command(
                     pi_board,
                     pwm_params,
                     servo_params,
-                    degreesToRadians(set_point),
+                    degreesToRadians([0, 45, -45][i]),
                     i,
                     j,
                 )
@@ -152,7 +152,7 @@ def main():
     calibrateB(servo_params, pi_board, pwm_params)
     print("Calibrated neutral angles:")
     print(servo_params.neutral_angle_degrees)
-    
+
     """
     servo_params.neutral_angle_degrees = np.array(
         [[8, 3, 0, 0], [45, 48, 45, 45], [-50, -38, -45, -45]]

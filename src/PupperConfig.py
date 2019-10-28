@@ -17,11 +17,11 @@ class ServoParams:
 
         # The neutral angle of the joint relative to the modeled zero-angle in degrees, for each joint
         self.neutral_angle_degrees = np.array(
-            [[8, 3, 0, 0], [45, 48, 45, 45], [-50, -38, -45, -45]]
+            [[8, 3, 5, -8], [42, 48, 30, 33], [-40, -31, -18, -43]]
         )
 
         self.servo_multipliers = np.array(
-            [[1, 1, 1, 1], [-1, 1, 1, -1], [1, -1, 1, -1]]
+            [[1, 1, 1, 1], [-1, 1, -1, 1], [1, -1, 1, -1]]
         )
 
     @property
@@ -30,7 +30,7 @@ class ServoParams:
 
 
 class MovementCommand:
-    """Stores movement command 
+    """Stores movement command
     """
 
     def __init__(self):
