@@ -70,7 +70,6 @@ def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index, set_
 
 def calibrateB(servo_params, pi_board, pwm_params):
     """Calibrate the angle offset for the twelve motors on the robot. Note that servo_params is modified in-place.
-
     Parameters
     ----------
     servo_params : ServoParams
@@ -152,7 +151,6 @@ def main():
     calibrateB(servo_params, pi_board, pwm_params)
     print("Calibrated neutral angles:")
     print(servo_params.neutral_angle_degrees)
-
     """
     servo_params.neutral_angle_degrees = np.array(
         [[8, 3, 0, 0], [45, 48, 45, 45], [-50, -38, -45, -45]]
