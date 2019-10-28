@@ -1,10 +1,10 @@
 from src import PupperXMLParser
 from src.Controller import Controller, step_controller
-from src.PupperConfig import PupperConfig, EnvironmentConfig, SolverConfig, SwingParams
+from src.PupperConfig import PupperConfig, EnvironmentConfig, SolverConfig, SwingParams, ServoParams, PWMParams 
 import time
 import numpy as np
 from mujoco_py import load_model_from_path, MjSim, MjViewer, functions
-from src.HardwareInterface import ServoParams, PWMParams, angle_to_pwm
+from src.HardwareInterface import angle_to_pwm
 
 
 def parallel_to_serial_joint_angles(joint_matrix):

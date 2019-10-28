@@ -1,12 +1,14 @@
 import pigpio
 from src.Controller import step_controller, Controller
-from src.HardwareInterface import (
-    send_servo_commands,
-    initialize_pwm,
-    PWMParams,
+from src.HardwareInterface import send_servo_commands, initialize_pwm
+from src.PupperConfig import (
+    MovementReference,
+    GaitParams,
+    StanceParams,
+    SwingParams,
     ServoParams,
+    PWMParams,
 )
-from src.PupperConfig import MovementReference, GaitParams, StanceParams, SwingParams
 import time
 import numpy as np
 
