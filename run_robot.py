@@ -23,11 +23,7 @@ def main():
 
     controller = Controller()
     controller.movement_reference = MovementReference()
-<<<<<<< HEAD
     controller.movement_reference.v_xy_ref = np.array([0.0, 0.0])
-=======
-    controller.movement_reference.v_xy_ref = np.array([0.0, 0.00])
->>>>>>> a5500ce2faf081509710ba2d7317984ce0eada2f
     controller.movement_reference.wz_ref = 0
     controller.swing_params = SwingParams()
     controller.swing_params.z_clearance = 0.06
