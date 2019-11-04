@@ -43,11 +43,12 @@ def main():
         step_controller(controller)
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
         msg = values.get()
+        print(msg)
         controller.movement_reference.v_xy_ref = np.array([msg["x"], msg["y"]])
         controller.movement_reference.wz_ref = msg["twist"]
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
-        print("Time since last loop: ", now - last_loop)
+        #print("Time since last loop: ", now - last_loop)
     end = time.time()
     print("seconds per loop: ", (end - start) / 1000.0)
 
