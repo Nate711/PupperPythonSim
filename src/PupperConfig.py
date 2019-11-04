@@ -17,7 +17,7 @@ class ServoParams:
 
         # The neutral angle of the joint relative to the modeled zero-angle in degrees, for each joint
         self.neutral_angle_degrees = np.array(
-            [[8, 3, 5, -8], [42, 48, 30, 33], [-40, -31, -18, -43]]
+            [[-12, -17, 6, -2], [49, 46, 47, 51], [-42, -31, -39, -33]]
         )
 
         self.servo_multipliers = np.array(
