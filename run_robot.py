@@ -1,3 +1,4 @@
+import threading
 import pigpio
 from src.Controller import step_controller, Controller
 from src.HardwareInterface import send_servo_commands, initialize_pwm
@@ -12,13 +13,26 @@ from src.PupperConfig import (
 import time
 import numpy as np
 import serial
+import queue
 
-SERIAL_PORT = "/dev/cu.usbmodem14203"
+SERIAL_PORT = "/dev/ttyACM0"
 BAUD_RATE = 115200
+
+def serial_reader(queue):
+    with serial.Serial(SERIAL_PORT, BAUD_RATE) as ser:
+        while True:
+            ser_out = ser.readline().decode('ascii').split(" ")
+            queue.put(ser_out)
 
 def main():
     """Main program
     """
+    dataQ = queue.Queue()
+
+    serial_thread = threading.Thread(target=serial_reader, args=(dataQ,))
+
+    serial_thread.start()
+
     pi_board = pigpio.pi()
     pwm_params = PWMParams()
     servo_params = ServoParams()
@@ -39,22 +53,19 @@ def main():
     last_loop = time.time()
     now = last_loop
     start = time.time()
-    for i in range(6000):
+    lastPos = 0;
+    while True:
         last_loop = time.time()
-        ser_out = ""
-        with serial.Serial(SERIAL_PORT, BAUD_RATE) as ser:
-            ser_out = [int(i) for i in ser.readline().split()]
-        controller.movement_reference.wz_ref = ser_out[0]/850 * 1/10
-        print (controller.movement_reference.wz_ref)
-
+        controller.movement_reference.wz_ref = int(-lastPos)/850
+        print(lastPos)
         step_controller(controller)
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
+        while not dataQ.empty():
+            print("HERE")
+            lastPos = int(dataQ.get()[1])
+        time.sleep(.007)
 
-        while now - last_loop < controller.gait_params.dt:
-            now = time.time()
-        print("Time since last loop: ", now - last_loop)
-    end = time.time()
-    print("seconds per loop: ", (end - start) / 1000.0)
+    serial_thread.join()
 
 
 main()
