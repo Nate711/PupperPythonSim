@@ -34,7 +34,8 @@ def main():
 
     initialize_pwm(pi_board, pwm_params)
 
-    values = UDPComms.Subscriber(8830)
+    values = UDPComms.Subscriber(8830, timeout=0.3)
+    #print(values.get())
     last_loop = time.time()
     now = last_loop
     start = time.time()
@@ -42,10 +43,19 @@ def main():
         last_loop = time.time()
         step_controller(controller)
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
-        msg = values.get()
-        print(msg)
-        controller.movement_reference.v_xy_ref = np.array([msg["x"], msg["y"]])
-        controller.movement_reference.wz_ref = msg["twist"]
+
+        try:
+            msg = values.get()
+            print(msg)
+        except UDPComms.timeout:
+            print("timout")
+            msg = {"x":0, "y":0, "twist":0}
+        x_vel = msg["y"] / 7.0
+        y_vel = -msg["x"] / 7.0
+        yaw_rate = -msg["twist"] * 0.8
+
+        controller.movement_reference.v_xy_ref = np.array([x_vel, y_vel])
+        controller.movement_reference.wz_ref = yaw_rate
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
         #print("Time since last loop: ", now - last_loop)
