@@ -60,13 +60,13 @@ def main():
     last_loop = time.time()
     now = last_loop
     start = time.time()
-    # values = UDPComms.Subscriber(8870)
-    msg = {"command": "move_forward", "time": "10"}  # simulated move command
+    values = UDPComms.Subscriber(8870)
+    #msg = {"command": "move_forward", "time": "10"}  # simulated move command
     #msg = {"command": "turn", "speed": "0.1", "radians": 1.0}  # simulated turn command
     for i in range(6000):
         last_loop = time.time()
         #get some info from UDP
-        #msg = values.get()
+        msg = values.get()
         command = msg["command"]
         if command is "set_velocity":
             set_velocity(controller, msg["velocity_x"], msg["velocity_y"])
