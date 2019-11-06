@@ -11,7 +11,10 @@ from src.PupperConfig import (
 )
 import time
 import numpy as np
+import serial
 
+SERIAL_PORT = "/dev/cu.usbmodem14203"
+BAUD_RATE = 115200
 
 def main():
     """Main program
@@ -38,6 +41,12 @@ def main():
     start = time.time()
     for i in range(6000):
         last_loop = time.time()
+        ser_out = ""
+        with serial.Serial(SERIAL_PORT, BAUD_RATE) as ser:
+            ser_out = [int(i) for i in ser.readline().split()]
+        controller.movement_reference.wz_ref = ser_out[0]/850 * 1/10
+        print (controller.movement_reference.wz_ref)
+
         step_controller(controller)
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
 
