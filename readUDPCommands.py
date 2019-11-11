@@ -66,7 +66,12 @@ def main():
     for i in range(6000):
         last_loop = time.time()
         #get some info from UDP
-        msg = values.get()
+        try:
+            msg = values.get()
+        except UDPComms.timeout:
+            #no commands received yet
+            pass
+
         command = msg["command"]
         if command == "set_velocity":
             set_velocity(controller, msg["velocity_x"], msg["velocity_y"])
