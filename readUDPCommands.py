@@ -68,11 +68,11 @@ def main():
         #get some info from UDP
         msg = values.get()
         command = msg["command"]
-        if command is "set_velocity":
+        if command == "set_velocity":
             set_velocity(controller, msg["velocity_x"], msg["velocity_y"])
-        elif command is "turn_radian":
+        elif command == "turn_radian":
             turn_radians(pi_board, pwm_params, servo_params, controller, msg["speed"], msg["radians"])
-        elif command is "turn_degrees":
+        elif command == "turn_degrees":
             turn_radians(pi_board, pwm_params, servo_params, controller, msg["speed"], msg["degrees"])
 
         step_controller(controller)
