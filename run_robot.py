@@ -39,7 +39,7 @@ def main():
     last_loop = time.time()
     now = last_loop
     start = time.time()
-    for i in range(6000):
+    for i in range(60000):
         last_loop = time.time()
         step_controller(controller)
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
