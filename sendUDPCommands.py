@@ -1,4 +1,5 @@
 import os
+import time
 from UDPComms import Publisher
 import signal
 
@@ -19,7 +20,6 @@ os.putenv('DISPLAY', ':0.0')
 # Prints the values for axis0
 while True:
     print("running")
-    '''
     command = input("Please enter an command (set_velocity, turn_radian, or turn_degrees or break): ")
     msg = {"command": command}
     if command == "set_velocity":
@@ -39,9 +39,10 @@ while True:
         msg["radians"] = degrees
     elif command == "break":
         break
-        '''
+
     msg = {"command": command}
     msg["velocity_x"] = 0.2
     msg["velocity_y"] = 0.2
     print(msg)
     drive_pub.send(msg)
+    time.sleep(2)
