@@ -68,11 +68,12 @@ def main():
         #get some info from UDP
         try:
             msg = values.get()
+            command = msg["command"]
         except UDPComms.timeout:
             #no commands received yet
-            pass
+            command = "none"
 
-        command = msg["command"]
+
         if command == "set_velocity":
             set_velocity(controller, msg["velocity_x"], msg["velocity_y"])
         elif command == "turn_radian":
