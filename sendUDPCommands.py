@@ -41,7 +41,7 @@ while True:
         break
         '''
     msg = {"command": "set_velocity"}
-    msg["velocity_x"] = 0.2
+    msg["velocity_x"] = 0.1
     msg["velocity_y"] = 0.0
     #print(msg)
     drive_pub.send(msg)
