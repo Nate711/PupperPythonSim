@@ -61,13 +61,15 @@ def main():
     now = last_loop
     start = time.time()
     values = UDPComms.Subscriber(8870)
-    #msg = {"command": "move_forward", "time": "10"}  # simulated move command
-    #msg = {"command": "turn", "speed": "0.1", "radians": 1.0}  # simulated turn command
     for i in range(6000):
         last_loop = time.time()
-        #get some info from UDP
-        msg = values.get()
-        command = msg["command"]
+        try:
+            msg = values.get()
+            command = msg["command"]
+        except UDPComms.timeout:
+            # no commands received yet
+            command = "none"
+
         if command == "set_velocity":
             set_velocity(controller, msg["velocity_x"], msg["velocity_y"])
         elif command == "turn_radian":
@@ -77,10 +79,6 @@ def main():
 
         step_controller(controller)
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
-        if i is 100:
-            msg = {"command": "turn_radian", "speed": "0.1", "radians": 1.0}
-        if i is 101:
-            msg = {}
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
         print("Time since last loop: ", now - last_loop)
