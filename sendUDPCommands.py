@@ -19,6 +19,7 @@ os.putenv('DISPLAY', ':0.0')
 time.sleep(5)
 # Prints the values for axis0
 while True:
+    '''
     command = input("Please enter an command (set_velocity, turn_radian, or turn_degrees or break): ")
     msg = {"command": command}
     if command == "set_velocity" or command[:3] == "set":
@@ -38,5 +39,7 @@ while True:
         msg["radians"] = degrees
     elif command == "break":
         break
+        '''
+    msg = {"command": "set_velocity", "velocity_x": 0.1, "velocity_y": 0.0}
     drive_pub.send(msg)
     time.sleep(2)
