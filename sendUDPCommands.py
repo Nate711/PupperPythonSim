@@ -32,23 +32,17 @@ message_thread.start()
 while True:
     command = input("Please enter an command (set_velocity, turn_radian, or turn_degrees or break): ")
     if command == "set_velocity" or command[:3] == "set":
-        msg["command"] = "set_velocity"
         velocity_x = input("Please enter an x velocity: ")
         velocity_y = input("Please enter an y velocity: ")
-        msg["velocity_x"] = float(velocity_x)
-        msg["velocity_y"] = float(velocity_y)
+        msg = {"command": "set_velocity", "velocity_x": float(velocity_x), "velocity_y": float(velocity_y)}
     elif command == "turn_radian" or command[:4] == "turn" and "radian" in command:
-        msg = {"command": "turn_radians"}
         speed = input("Please enter an turn speed: ")
         radians = input("Please enter the number of radians you wish to turn: ")
-        msg["speed"] = float(speed)
-        msg["radians"] = float(radians)
+        msg = {"command": "turn_radians", "speed": float(speed), "radians": float(radians)}
     elif command == "turn_degrees" or command[:4] == "turn" and "degrees" in command:
-        msg = {"command": "turn_degrees"}
         speed = input("Please enter an turn speed: ")
         degrees = input("Please enter the number of degrees you wish to turn: ")
-        msg["speed"] = float(speed)
-        msg["radians"] = float(degrees)
+        msg = {"command": "turn_radians", "speed": float(speed), "degrees": float(degrees)}
     elif command == "break":
         break
     #msg = {"command": "set_velocity", "velocity_x": 0.1, "velocity_y": 0.0}
