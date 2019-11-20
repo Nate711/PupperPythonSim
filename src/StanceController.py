@@ -61,4 +61,6 @@ def stance_foot_location(
         z_measured, stance_params, movement_reference, gait_params
     )
     incremented_location = delta_R @ stance_foot_location + delta_p
+    # incremented_location = R(movement_reference.pitch, movement_reference.roll) @ incremented_location
+
     return incremented_location
