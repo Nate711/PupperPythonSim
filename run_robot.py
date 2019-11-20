@@ -25,6 +25,10 @@ def main():
     controller.movement_reference = MovementReference()
     controller.movement_reference.v_xy_ref = np.array([0.0, 0.0])
     controller.movement_reference.wz_ref = 0
+
+    controller.movement_reference.pitch = 15.0 * np.pi / 180.0
+    controller.movement_reference.roll = 0
+
     controller.swing_params = SwingParams()
     controller.swing_params.z_clearance = 0.06
     controller.stance_params = StanceParams()
@@ -49,13 +53,17 @@ def main():
             print(msg)
         except UDPComms.timeout:
             print("timout")
-            msg = {"x":0, "y":0, "twist":0}
+            msg = {"x":0, "y":0, "twist":0, "pitch":0}
         x_vel = msg["y"] / 7.0
         y_vel = -msg["x"] / 7.0
         yaw_rate = -msg["twist"] * 0.8
 
+        pitch = msg["pitch"] * 30.0 * np.pi / 180.0
+        print(pitch)
+
         controller.movement_reference.v_xy_ref = np.array([x_vel, y_vel])
         controller.movement_reference.wz_ref = yaw_rate
+        controller.movement_reference.pitch = pitch
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
         #print("Time since last loop: ", now - last_loop)

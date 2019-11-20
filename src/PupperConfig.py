@@ -47,6 +47,8 @@ class MovementReference:
         self.v_xy_ref = np.array([0, 0])
         self.wz_ref = 0.0
         self.z_ref = -0.16
+        self.pitch = 0.0
+        self.roll = 0.0
 
 
 class StanceParams:
