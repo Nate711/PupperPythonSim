@@ -34,15 +34,15 @@ while True:
     if command == "set_velocity" or command[:3] == "set":
         velocity_x = input("Please enter an x velocity: ")
         velocity_y = input("Please enter an y velocity: ")
-        msg = {"command": "set_velocity", "velocity_x": float(velocity_x), "velocity_y": float(velocity_y)}
+        msg.update({"command": "set_velocity", "velocity_x": float(velocity_x), "velocity_y": float(velocity_y)})
     elif command == "turn_radian" or command[:4] == "turn" and "radian" in command:
         speed = input("Please enter an turn speed: ")
         radians = input("Please enter the number of radians you wish to turn: ")
-        msg = {"command": "turn_radians", "speed": float(speed), "radians": float(radians)}
+        msg.update({"command": "turn_radians", "speed": float(speed), "radians": float(radians)})
     elif command == "turn_degrees" or command[:4] == "turn" and "degrees" in command:
         speed = input("Please enter an turn speed: ")
         degrees = input("Please enter the number of degrees you wish to turn: ")
-        msg = {"command": "turn_radians", "speed": float(speed), "degrees": float(degrees)}
+        msg.update({"command": "turn_radians", "speed": float(speed), "degrees": float(degrees)})
     elif command == "break":
         break
     #msg = {"command": "set_velocity", "velocity_x": 0.1, "velocity_y": 0.0}
