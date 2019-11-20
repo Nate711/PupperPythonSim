@@ -12,7 +12,8 @@ def handler(signum, frame):
     print("GOT singal", signum)
 
 def send_message(message):
-    drive_pub.send(message)
+    while True:
+        drive_pub.send(message)
 
 signal.signal(signal.SIGHUP, handler)
 
