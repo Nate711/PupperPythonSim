@@ -61,26 +61,27 @@ def main():
     now = last_loop
     start = time.time()
     values = UDPComms.Subscriber(8870)
-    for i in range(6000):
+    while 1:
         last_loop = time.time()
         try:
             msg = values.get()
             command = msg["command"]
+            print(msg)
+        #print(msg)
+            if command == "set_velocity":
+                set_velocity(controller, msg["velocity_x"], msg["velocity_y"])
+            elif command == "turn_radians":
+                turn_radians(pi_board, pwm_params, servo_params, controller, msg["speed"], msg["radians"])
+            elif command == "turn_degrees":
+                turn_radians(pi_board, pwm_params, servo_params, controller, msg["speed"], msg["degrees"])
+
+            step_controller(controller)
+            send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
+            while now - last_loop < controller.gait_params.dt:
+                now = time.time()
         except UDPComms.timeout:
-            # no commands received yet
-            command = "none"
-
-        if command == "set_velocity":
-            set_velocity(controller, msg["velocity_x"], msg["velocity_y"])
-        elif command == "turn_radian":
-            turn_radians(pi_board, pwm_params, servo_params, controller, msg["speed"], msg["radians"])
-        elif command == "turn_degrees":
-            turn_radians(pi_board, pwm_params, servo_params, controller, msg["speed"], msg["degrees"])
-
-        step_controller(controller)
-        send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
-        while now - last_loop < controller.gait_params.dt:
-            now = time.time()
+            continue
+            #print("no command received")
        # print("Time since last loop: ", now - last_loop)
     end = time.time()
     #print("seconds per loop: ", (end - start) / 1000.0)
