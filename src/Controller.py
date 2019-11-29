@@ -6,6 +6,8 @@ from src.StanceController import stance_foot_location
 from src.SwingLegController import swing_foot_location
 
 import numpy as np
+from transforms3d.euler import euler2mat
+
 
 
 class Controller:
@@ -97,9 +99,18 @@ def step_controller(controller):
         controller.gait_params,
         controller.movement_reference,
     )
+
+    rotated_foot_locations = euler2mat(controller.movement_reference.roll, controller.movement_reference.pitch, 0.0) @ controller.foot_locations
+
     controller.joint_angles = four_legs_inverse_kinematics(
-        controller.foot_locations, controller.robot_config
+        rotated_foot_locations, controller.robot_config
     )
+    print(controller.foot_locations)
+    print(rotated_foot_locations)
+
+    # controller.joint_angles = four_legs_inverse_kinematics(
+    #     controller.foot_locations, controller.robot_config
+    # )
     controller.ticks += 1
 
 

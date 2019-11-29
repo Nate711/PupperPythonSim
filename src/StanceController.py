@@ -61,4 +61,8 @@ def stance_foot_location(
         z_measured, stance_params, movement_reference, gait_params
     )
     incremented_location = delta_R @ stance_foot_location + delta_p
+
+    # rotated_locations = euler2mat(movement_reference.roll, movement_reference.pitch, 0.0) @ incremented_location
+    # print(incremented_location, rotated_locations)
+
     return incremented_location

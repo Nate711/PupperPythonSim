@@ -47,6 +47,8 @@ class MovementReference:
         self.v_xy_ref = np.array([0, 0])
         self.wz_ref = 0.0
         self.z_ref = -0.16
+        self.pitch = 0.0
+        self.roll = 0.0
 
 
 class StanceParams:
@@ -111,7 +113,8 @@ class GaitParams:
         self.dt = 0.01
         self.num_phases = 4
         self.contact_phases = np.array(
-            [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
+            # [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
+            [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
         )
         self.overlap_time = (
             0.1
