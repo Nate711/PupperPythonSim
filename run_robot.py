@@ -39,7 +39,6 @@ def main():
     initialize_pwm(pi_board, pwm_params)
 
     values = UDPComms.Subscriber(8830, timeout=0.3)
-    #print(values.get())
     last_loop = time.time()
     now = last_loop
     start = time.time()

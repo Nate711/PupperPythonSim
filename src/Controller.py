@@ -100,17 +100,13 @@ def step_controller(controller):
         controller.movement_reference,
     )
 
+    # Apply the desired body rotation
+    # TODO: See https://github.com/Nate711/PupperPythonSim/issues/2
     rotated_foot_locations = euler2mat(controller.movement_reference.roll, controller.movement_reference.pitch, 0.0) @ controller.foot_locations
 
     controller.joint_angles = four_legs_inverse_kinematics(
         rotated_foot_locations, controller.robot_config
     )
-    print(controller.foot_locations)
-    print(rotated_foot_locations)
-
-    # controller.joint_angles = four_legs_inverse_kinematics(
-    #     controller.foot_locations, controller.robot_config
-    # )
     controller.ticks += 1
 
 
