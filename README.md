@@ -1,7 +1,7 @@
 # Pupper Robot: Python Simulation
 
 ## Overview
-This repository contains Python code to run Pupper, a Raspberry Pi-based quadruped robot. In addition to the robot code, this repository also contains a wrapper to simulate the robot in MuJoCo using the same code that runs on the robot.
+This repository contains Python code to run Pupper, a Raspberry Pi-based quadruped robot. In addition to the robot code, this repository also contains a wrapper to simulate the robot in MuJoCo or PyBullet using the same code that runs on the robot.
 
 ## Installation for PyBullet Simulation
 The PyBullet simulator is free for academic use and requires no license whatsoever, but in my experience PyBullet is much slower than MuJoCo and is less clear about how to tune the contact parameters.
@@ -77,6 +77,12 @@ python3 simulate.py
         ```shell
         uname -r
         ```
+- Install pigpio
+    - Run
+    ```shell
+    sudo apt-get install python3-distutils
+    ```
+    - Follow the instructions available at http://abyz.me.uk/rpi/pigpio/download.html to install a GPIO library for the Pi that adds software PWM capability.
 - Get the Pupper Code
     - Clone the Pupper repository https://github.com/Nate711/PupperPythonSim/
     - Install requirements:
