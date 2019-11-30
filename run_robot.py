@@ -52,7 +52,7 @@ def main():
             print(msg)
         except UDPComms.timeout:
             print("timout")
-            msg = {"x":0, "y":0, "twist":0, "pitch":0}
+            msg = {"x": 0, "y": 0, "twist": 0, "pitch": 0}
         x_vel = msg["y"] / 7.0
         y_vel = -msg["x"] / 7.0
         yaw_rate = -msg["twist"] * 0.8
@@ -65,7 +65,7 @@ def main():
         controller.movement_reference.pitch = pitch
         while now - last_loop < controller.gait_params.dt:
             now = time.time()
-        #print("Time since last loop: ", now - last_loop)
+        # print("Time since last loop: ", now - last_loop)
     end = time.time()
     print("seconds per loop: ", (end - start) / 1000.0)
 

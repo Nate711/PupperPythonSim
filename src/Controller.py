@@ -9,7 +9,6 @@ import numpy as np
 from transforms3d.euler import euler2mat
 
 
-
 class Controller:
     """Controller and planner object
     """
@@ -102,7 +101,12 @@ def step_controller(controller):
 
     # Apply the desired body rotation
     # TODO: See https://github.com/Nate711/PupperPythonSim/issues/2
-    rotated_foot_locations = euler2mat(controller.movement_reference.roll, controller.movement_reference.pitch, 0.0) @ controller.foot_locations
+    rotated_foot_locations = (
+        euler2mat(
+            controller.movement_reference.roll, controller.movement_reference.pitch, 0.0
+        )
+        @ controller.foot_locations
+    )
 
     controller.joint_angles = four_legs_inverse_kinematics(
         rotated_foot_locations, controller.robot_config

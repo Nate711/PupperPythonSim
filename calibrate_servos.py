@@ -39,7 +39,7 @@ def stepUntil(servo_params, pi_board, pwm_params, kValue, i_index, j_index, set_
 
     while not foundPosition:
         aboveOrBelow = str(
-            input("Is the leg 'above' or 'below' " + set_names[i_index]+ "? Input: ")
+            input("Is the leg 'above' or 'below' " + set_names[i_index] + "? Input: ")
         )
         if aboveOrBelow == "above" or aboveOrBelow == "a":
             offset += 1.0
