@@ -3,6 +3,56 @@
 ## Overview
 This repository contains Python code to run Pupper, a Raspberry Pi-based quadruped robot. In addition to the robot code, this repository also contains a wrapper to simulate the robot in MuJoCo or PyBullet using the same code that runs on the robot.
 
+## Installing and Running Code on the Raspberry Pi
+### Materials
+- Raspberry Pi 4
+- SD Card (32GB recommended)
+- Raspberry Pi 4 power supply (USB-C, 5V, >=3A)
+- Ethernet cable
+
+### Steps
+- Install Raspbian Buster Lite onto the Pi
+    - Download https://www.raspberrypi.org/downloads/raspbian/
+    - Use BalenaEtcher to flash the OS to the SD card
+- Set up the Raspberry Pi
+    - Before even ejecting the SD Card, follow the instructions on this repo to put the self-installing setup script on the Pi: https://github.com/stanfordroboticsclub/RPI-Setup 
+    - Complete the “Actually Doing It”, “Getting Internet Access”, and “Getting Started With the Pi” sections
+- Test that the Pi works and connects to the internet
+- (Optional) Install the PREEMPT-RT kernel onto the Pi
+    - Download the kernel patch https://github.com/lemariva/RT-Tools-RPi/tree/master/preempt-rt/kernel_4_19_59-rt23-v7l%2B
+    - Follow these instructions starting from “Transfer the Kernel” https://lemariva.com/blog/2019/09/raspberry-pi-4b-preempt-rt-kernel-419y-performance-test
+    - Test by running in the shell:
+        ```shell
+        uname -r
+        ```
+    - We haven't yet characterized the benefits of using the preempt-rt kernel on the Pi so skipping this step might still give fine performance.
+- Install pigpio
+    - Run
+    ```shell
+    sudo apt-get install python3-distutils
+    ```
+    - Follow the instructions available at http://abyz.me.uk/rpi/pigpio/download.html to install a GPIO library for the Pi that adds software PWM capability.
+- Get the Pupper code
+    - Clone the Pupper repository https://github.com/Nate711/PupperPythonSim/
+    - Install requirements:
+    ```shell
+    bash install_packages_robot.sh
+    ```
+- Get the Pupper controller code
+    - Clone the controller repo: https://github.com/stanfordroboticsclub/PupperCommand
+    - Follow the instructions in the README
+## Running the Robot
+- Start the joystick publisher. Instructions here: https://github.com/stanfordroboticsclub/PupperCommand/blob/master/README.md
+- Start the PiGPIO daemon by executing in shell:
+    ```shell
+    sudo pigpiod
+    ```
+- Run the robot code: 
+    ```shell
+    python3 run_robot.py
+    ``` 
+
+
 ## Installation for PyBullet Simulation
 The PyBullet simulator is free for academic use and requires no license whatsoever, but in my experience PyBullet is much slower than MuJoCo and is less clear about how to tune the contact parameters.
 
@@ -55,46 +105,3 @@ python3 simulate.py
 ``` 
 2. The MuJoCo simulator should then pop up in a new window with various interactive options. Press space to stop or start the simulation.
 
-## Installation for Raspberry Pi Robot
-### Materials
-- Raspberry Pi 4
-- SD Card (32GB recommended)
-- Raspberry Pi 4 power supply (USB-C, 5V, >=3A)
-- Ethernet cable
-
-### Steps
-- Install Raspbian Buster Lite onto the Pi
-    - Download https://www.raspberrypi.org/downloads/raspbian/
-    - Use BalenaEtcher to flash the OS to the SD card
-- Set up the Raspberry Pi
-    - Before even ejecting the SD Card, follow the instructions on this repo to put the self-installing setup script on the Pi: https://github.com/stanfordroboticsclub/RPI-Setup 
-    - Complete the “Actually Doing It”, “Getting Internet Access”, and “Getting Started With the Pi” sections
-- Test that the Pi works and connects to the internet
-- Install the PREEMPT-RT kernel onto the Pi
-    - Download the kernel patch https://github.com/lemariva/RT-Tools-RPi/tree/master/preempt-rt/kernel_4_19_59-rt23-v7l%2B
-    - Follow these instructions starting from “Transfer the Kernel” https://lemariva.com/blog/2019/09/raspberry-pi-4b-preempt-rt-kernel-419y-performance-test
-    - Test by running in the shell:
-        ```shell
-        uname -r
-        ```
-- Install pigpio
-    - Run
-    ```shell
-    sudo apt-get install python3-distutils
-    ```
-    - Follow the instructions available at http://abyz.me.uk/rpi/pigpio/download.html to install a GPIO library for the Pi that adds software PWM capability.
-- Get the Pupper Code
-    - Clone the Pupper repository https://github.com/Nate711/PupperPythonSim/
-    - Install requirements:
-    ```shell
-    bash install_packages_robot.sh
-    ```
-## Running the Robot
-- Start the PiGPIO daemon by executing in shell:
-    ```shell
-    sudo pigpiod
-    ```
-- Load the robot code in the Julia REPL: 
-    ```shell
-    python3 run_robot.py
-    ``` 
