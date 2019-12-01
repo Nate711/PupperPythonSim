@@ -42,7 +42,19 @@ This repository contains Python code to run Pupper, a Raspberry Pi-based quadrup
     - Clone the controller repo: https://github.com/stanfordroboticsclub/PupperCommand
     - Follow the instructions in the README
 ## Running the Robot
-- Start the joystick publisher. Instructions here: https://github.com/stanfordroboticsclub/PupperCommand/blob/master/README.md
+- SSH into the robot
+    ```shell
+    ssh pi@10.0.0.xx
+    ``` where xx is the local address you chose for the Pi
+- Go into RW mode
+    ```shell
+    rw
+    ```
+- In a separate shell, start the joystick publisher. Instructions here: https://github.com/stanfordroboticsclub/PupperCommand/blob/master/README.md
+- Go into this repo's PupperPythonSim directory
+    ```shell
+    cd PupperPythonSim
+    ```
 - Start the PiGPIO daemon by executing in shell:
     ```shell
     sudo pigpiod
