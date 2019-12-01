@@ -45,7 +45,8 @@ This repository contains Python code to run Pupper, a Raspberry Pi-based quadrup
 - SSH into the robot
     ```shell
     ssh pi@10.0.0.xx
-    ``` where xx is the local address you chose for the Pi
+    ``` 
+    where xx is the local address you chose for the Pi
 - Go into RW mode
     ```shell
     rw
