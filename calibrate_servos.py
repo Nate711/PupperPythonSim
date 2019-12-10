@@ -142,7 +142,7 @@ def calibrate_b(servo_params, pi_board, pwm_params):
                 okay = ""
                 while okay not in ["yes", "no"]:
                     okay = str(
-                        input("Check angle. Are you satisfied? Enter 'yes' or 'no']")
+                        input("Check angle. Are you satisfied? Enter 'yes' or 'no': ")
                     )
                 completed = okay == "yes"
 
