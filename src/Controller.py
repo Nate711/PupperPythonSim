@@ -22,6 +22,7 @@ class Controller:
 
         self.ticks = 0
 
+        # Set default for foot locations and joint angles
         self.foot_locations = (
             self.stance_params.default_stance
             + np.array([0, 0, self.movement_reference.z_ref])[:, np.newaxis]
@@ -112,29 +113,3 @@ def step_controller(controller):
         rotated_foot_locations, controller.robot_config
     )
     controller.ticks += 1
-
-
-def run():
-    """Testing function that runs the robot for one second.
-    
-    Returns
-    -------
-    (Numpy array (3, 4, timesteps), Numpy array (3, 4, timesteps))
-        (history of foot locations, history of joint angles)
-    """
-    c = Controller()
-    c.movement_reference.v_xy_ref = np.array([0.2, 0.0])
-    c.movement_reference.wz_ref = 0.5
-
-    tf = 1.0
-    time_steps = int(tf / c.gait_params.dt)
-
-    foot_loc_history = np.zeros((3, 4, time_steps))
-    joint_angle_history = np.zeros((3, 4, time_steps))
-
-    for i in range(time_steps):
-        step_controller(c)
-        foot_loc_history[:, :, i] = c.foot_locations
-        joint_angle_history[:, :, i] = c.joint_angles
-
-    return foot_loc_history, joint_angle_history
