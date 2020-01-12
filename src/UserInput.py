@@ -39,7 +39,7 @@ def update_controller(controller, user_input_obj):
         [user_input_obj.x_vel, user_input_obj.y_vel]
     )
     controller.movement_reference.wz_ref = user_input_obj.yaw_rate
-    controller.movement_reference.pitch = user_input_obj.pitch
+    controller.movement_reference.pitch = controller.movement_reference.pitch * 0.9 + user_input_obj.pitch * 0.1
 
     if user_input_obj.gait_mode == 0:
         controller.gait_params.contact_phases = np.array(
