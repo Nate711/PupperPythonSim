@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.linalg import solve
-import RobotConfig
+from RobotConfig import MICROS_PER_RAD, NEUTRAL_ANGLE_DEGREES
 
 
 class PWMParams:
