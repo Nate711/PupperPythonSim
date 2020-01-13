@@ -33,9 +33,9 @@ def main():
     controller.movement_reference.roll = 0
 
     controller.swing_params = SwingParams()
-    controller.swing_params.z_clearance = 0.06
+    controller.swing_params.z_clearance = 0.05
     controller.stance_params = StanceParams()
-    controller.stance_params.delta_y = 0.08
+    controller.stance_params.delta_y = 0.10
     controller.gait_params = GaitParams()
 
     user_input = UserInputs()
