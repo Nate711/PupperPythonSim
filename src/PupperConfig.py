@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.linalg import solve
-from RobotConfig import MICROS_PER_RAD, NEUTRAL_ANGLE_DEGREES
+from src.RobotConfig import MICROS_PER_RAD, NEUTRAL_ANGLE_DEGREES
 
 
 class PWMParams:
@@ -55,9 +55,9 @@ class StanceParams:
 
     def __init__(self):
         self.z_time_constant = 0.02
-        self.z_speed = 0.01  # maximum speed [m/s]
-        self.pitch_time_constant = 1.0
-        self.roll_speed = 0.02  # maximum roll rate [rad/s]
+        self.z_speed = 0.02  # maximum speed [m/s]
+        self.pitch_time_constant = 0.5
+        self.roll_speed = 0.12  # maximum roll rate [rad/s]
         self.delta_x = 0.1
         self.delta_y = 0.07
 
