@@ -43,10 +43,8 @@ def main():
     user_input = UserInputs()
 
     last_loop = time.time()
-<<<<<<< HEAD
 
     while(True):
-
         if time.time() - last_loop < controller.gait_params.dt:
             continue
         last_loop = time.time()
@@ -60,31 +58,5 @@ def main():
 
         # Update the pwm widths going to the servos
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
-=======
-    now = last_loop
-    start = time.time()
-
-    for i in range(60000):
-        last_loop = time.time()
-        
-        # Parse the udp joystick commands and then update the robot controller's parameters
-        get_input(user_input)
-        update_controller(controller, user_input)
-
-        # Step the controller forward by dt
-        step_controller(controller)
-
-        # Update the pwm widths going to the servos
-        send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
-
-        # Wait until it's time to execute again
-        while now - last_loop < controller.gait_params.dt:
-            now = time.time()
-        # print("Time since last loop: ", now - last_loop)
-
-    end = time.time()
-    print("seconds per loop: ", (end - start) / 1000.0)
->>>>>>> AddGate
-
 
 main()

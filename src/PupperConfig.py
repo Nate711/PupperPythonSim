@@ -16,13 +16,7 @@ class ServoParams:
         self.micros_per_rad = MICROS_PER_RAD  # Must be calibrated
 
         # The neutral angle of the joint relative to the modeled zero-angle in degrees, for each joint
-<<<<<<< HEAD
-        self.neutral_angle_degrees = np.array(
-            [[9, 5, 13, -9], [45, 47, 44, 52], [-14, -36, -15, -35]]
-        )
-=======
         self.neutral_angle_degrees = NEUTRAL_ANGLE_DEGREES
->>>>>>> AddGate
 
         self.servo_multipliers = np.array(
             [[1, 1, 1, 1], [-1, 1, -1, 1], [1, -1, 1, -1]]
