@@ -40,7 +40,7 @@ def step(
     Parameters
     ----------
     ticks : int
-        Number of clock ticks since the start. Time between ticks is given my the gait params dt variable.
+        Number of clock ticks since the start. Time between ticks is given by the gait params dt variable.
     foot_locations : Numpy array (3, 4)
         Locations of all four feet.
     swing_params : SwingParams
@@ -113,3 +113,14 @@ def step_controller(controller):
         rotated_foot_locations, controller.robot_config
     )
     controller.ticks += 1
+
+
+def setPoseToDefault(controller):
+    controller.foot_locations = (
+        controller.stance_params.default_stance
+        + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
+    )
+    controller.joint_angles = four_legs_inverse_kinematics(
+        controller.foot_locations, controller.robot_config
+    )
+    
