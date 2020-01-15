@@ -47,24 +47,27 @@ This repository contains Python code to run Pupper, a Raspberry Pi-based quadrup
     ssh pi@10.0.0.xx
     ``` 
     where xx is the local address you chose for the Pi
-- Go into RW mode
+- Once connected to the Pi, go into read-write mode
     ```shell
     rw
     ```
-- In a separate shell, start the joystick publisher. Instructions here: https://github.com/stanfordroboticsclub/PupperCommand/blob/master/README.md
-- Go into this repo's PupperPythonSim directory
+- In a separate shell, start the joystick publisher. These instructions are copied from: https://github.com/stanfordroboticsclub/PupperCommand/blob/master/README.md
+    ```shell
+    cd PupperCommand
+    sudo systemctl start ds4drv
+    sudo python3 joystick.py
+    ```
+- Now go into this repo's PupperPythonSim directory and run the robot code!
     ```shell
     cd PupperPythonSim
+    sudo python3 run_robot.py
     ```
-- Start the PiGPIO daemon by executing in shell:
+    Sudo is needed so that the script can start the pigpio daemon.
+- You can interrupt and stop the program by pressing Control-C.
+- To turn off the servo motors, run
     ```shell
-    sudo pigpiod
+    sudo pkill pigpiod
     ```
-- Run the robot code: 
-    ```shell
-    python3 run_robot.py
-    ``` 
-
 
 ## Installation for PyBullet Simulation
 The PyBullet simulator is free for academic use and requires no license whatsoever, but in my experience PyBullet is much slower than MuJoCo and is less clear about how to tune the contact parameters.
