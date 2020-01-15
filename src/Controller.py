@@ -113,7 +113,7 @@ def step_controller(controller, robot_config):
     controller.ticks += 1
 
 
-def setPoseToDefault(controller, robot_config):
+def set_pose_to_default(controller, robot_config):
     controller.foot_locations = (
         controller.stance_params.default_stance
         + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
