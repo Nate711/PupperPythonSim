@@ -1,5 +1,4 @@
 from src.PupperConfig import SwingParams, StanceParams, GaitParams, MovementReference
-from src.PupperConfig import PupperConfig
 from src.Gaits import contacts, subphase_time
 from src.Kinematics import four_legs_inverse_kinematics
 from src.StanceController import stance_foot_location
@@ -13,12 +12,11 @@ class Controller:
     """Controller and planner object
     """
 
-    def __init__(self):
+    def __init__(self, robot_config):
         self.swing_params = SwingParams()
         self.stance_params = StanceParams()
         self.gait_params = GaitParams()
         self.movement_reference = MovementReference()
-        self.robot_config = PupperConfig()
 
         self.ticks = 0
 
@@ -28,7 +26,7 @@ class Controller:
             + np.array([0, 0, self.movement_reference.z_ref])[:, np.newaxis]
         )
         self.joint_angles = four_legs_inverse_kinematics(
-            self.foot_locations, self.robot_config
+            self.foot_locations, robot_config
         )
 
 
@@ -83,7 +81,7 @@ def step(
     return new_foot_locations
 
 
-def step_controller(controller):
+def step_controller(controller, robot_config):
     """Steps the controller forward one timestep
     
     Parameters
@@ -110,17 +108,16 @@ def step_controller(controller):
     )
 
     controller.joint_angles = four_legs_inverse_kinematics(
-        rotated_foot_locations, controller.robot_config
+        rotated_foot_locations, robot_config
     )
     controller.ticks += 1
 
 
-def setPoseToDefault(controller):
+def setPoseToDefault(controller, robot_config):
     controller.foot_locations = (
         controller.stance_params.default_stance
         + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
     )
     controller.joint_angles = four_legs_inverse_kinematics(
-        controller.foot_locations, controller.robot_config
+        controller.foot_locations, robot_config
     )
-    

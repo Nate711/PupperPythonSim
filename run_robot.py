@@ -5,6 +5,7 @@ import time
 from src.Controller import step_controller, Controller
 from src.HardwareInterface import send_servo_commands, initialize_pwm
 from src.PupperConfig import (
+    PupperConfig,
     MovementReference,
     GaitParams,
     StanceParams,
@@ -22,9 +23,10 @@ def main():
     pwm_params = PWMParams()
     initialize_pwm(pi_board, pwm_params)
 
+    robot_config = PupperConfig()
     servo_params = ServoParams()
 
-    controller = Controller()
+    controller = Controller(robot_config)
     controller.movement_reference = MovementReference()
     controller.movement_reference.v_xy_ref = np.array([0.0, 0.0])
     controller.movement_reference.wz_ref = 0
@@ -41,8 +43,6 @@ def main():
     user_input = UserInputs()
 
     last_loop = time.time()
-    now = last_loop
-    start = time.time()
 
     while(True):
 
@@ -55,14 +55,10 @@ def main():
         update_controller(controller, user_input)
 
         # Step the controller forward by dt
-        step_controller(controller)
+        step_controller(controller, robot_config)
 
         # Update the pwm widths going to the servos
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
-
-
-    end = time.time()
-    # print("seconds per loop: ", (end - start) / 1000.0)
 
 
 main()
