@@ -21,25 +21,13 @@ _ext indicates linear extension of the leg. Positive values = leg goes up
 <compiler angle="radian" coordinate="local" inertiafromgeom="false"/>
 
 <default>
-    <joint armature="0.01936" solimplimit="0.9 0.95 0.01" solreflimit="0.01 1" stiffness="0"/>
-    <geom conaffinity="0" condim="3" contype="1" friction="1.5 .1 .1" rgba="0.8 0.6 .4 1" solimp="0.9 0.95 0.01" solref="0.01 1"/>
+    <joint armature="0.01936" stiffness="0"/>
+    <geom conaffinity="0" condim="3" contype="1" friction="1.5 .1 .1" rgba="0.8 0.6 .4 1"/>
     <position forcelimited="true"/>
 </default>
 
-<option>
-    <flag sensornoise="disable"/>
-</option>
-
-<sensor>
-    <accelerometer name="accel" noise="0.01" site="imu_site"/>
-    <gyro name="gyro" noise="0.02" site="imu_site"/>
-</sensor>
-
 <size nstack="300000" nuser_geom="1"/>
 
-<!-- Took out gravity="0 0 -9.81" term-->
-<option timestep="0.01"/>
-<!-- <option gravity="0 0 0" timestep="0.01"/> -->
 <asset>
     <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
     <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>

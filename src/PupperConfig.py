@@ -60,12 +60,13 @@ class StanceParams:
         self.roll_speed = 0.16  # maximum roll rate [rad/s]
         self.delta_x = 0.1
         self.delta_y = 0.10
+        self.x_shift = 0.0
 
     @property
     def default_stance(self):
         return np.array(
             [
-                [self.delta_x, self.delta_x, -self.delta_x, -self.delta_x],
+                [self.delta_x + self.x_shift, self.delta_x + self.x_shift, -self.delta_x + self.x_shift, -self.delta_x + self.x_shift],
                 [-self.delta_y, self.delta_y, -self.delta_y, self.delta_y],
                 [0, 0, 0, 0],
             ]
