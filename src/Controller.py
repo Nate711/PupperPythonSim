@@ -6,6 +6,8 @@ from src.SwingLegController import swing_foot_location
 
 import numpy as np
 from transforms3d.euler import euler2mat
+from transforms3d.quaternions import quat2mat, qconjugate, quat2axangle
+from transforms3d.axangles import axangle2mat
 
 
 class Controller:
@@ -81,7 +83,7 @@ def step(
     return new_foot_locations
 
 
-def step_controller(controller, robot_config):
+def step_controller(controller, robot_config, quat_orientation):
     """Steps the controller forward one timestep
     
     Parameters
@@ -107,9 +109,18 @@ def step_controller(controller, robot_config):
         @ controller.foot_locations
     )
 
+    q_inv = qconjugate(quat_orientation)
+    (axis, theta) = quat2axangle(q_inv)
+    rmat = axangle2mat(axis * np.array([1, 1, 0]), theta)
+    rotated_foot_locations = rmat @ controller.foot_locations
+
+    # try:
     controller.joint_angles = four_legs_inverse_kinematics(
         rotated_foot_locations, robot_config
     )
+    # except Exception as e:
+    #     print("Exception: ", e)
+
     controller.ticks += 1
 
 

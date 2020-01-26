@@ -83,9 +83,9 @@ sim_seconds_per_sim_step = 1.0 / sim_steps_per_sim_second
 start = time.time()
 last_control_update = 0
 
-controller.gait_params.contact_phases = np.array(
-    [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
-)
+# controller.gait_params.contact_phases = np.array(
+#     [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
+# )
 controller.swing_params.z_clearance = 0.03
 controller.movement_reference.v_xy_ref = np.array([0.10, 0.0])
 controller.movement_reference.wz_ref = 0.5
@@ -108,8 +108,12 @@ for steps in range(timesteps):
         hey = time.time()
         last_control_update = simluated_time_elapsed
 
+        (pos, q_scalar_last) = p.getBasePositionAndOrientation(1)
+        q_corrected = (q_scalar_last[3], q_scalar_last[0], q_scalar_last[1], q_scalar_last[2])
+        print("Orientation: ", q_corrected)
+
         # Calculate the next joint angle commands
-        step_controller(controller, robot_config)
+        step_controller(controller, robot_config, q_corrected)
 
         # Convert the joint angles from the parallel linkage to the simulated serial linkage
         serial_joint_angles = parallel_to_serial_joint_angles(
@@ -131,6 +135,8 @@ for steps in range(timesteps):
 
     # Simulate physics for 1/240 seconds (1/240 is the default timestep)
     p.stepSimulation()
+
+    time.sleep(0.01)
 
     # Performance testing
     elapsed = time.time() - start
