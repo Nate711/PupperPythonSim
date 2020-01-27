@@ -6,7 +6,7 @@ from src.SwingLegController import swing_foot_location
 
 import numpy as np
 from transforms3d.euler import euler2mat
-from transforms3d.quaternions import quat2mat, qconjugate, quat2axangle
+from transforms3d.quaternions import qconjugate, quat2axangle
 from transforms3d.axangles import axangle2mat
 
 
@@ -101,7 +101,6 @@ def step_controller(controller, robot_config, quat_orientation):
     )
 
     # Apply the desired body rotation
-    # TODO: See https://github.com/Nate711/PupperPythonSim/issues/2
     rotated_foot_locations = (
         euler2mat(
             controller.movement_reference.roll, controller.movement_reference.pitch, 0.0
@@ -112,14 +111,12 @@ def step_controller(controller, robot_config, quat_orientation):
     q_inv = qconjugate(quat_orientation)
     (axis, theta) = quat2axangle(q_inv)
     rmat = axangle2mat(axis * np.array([1, 1, 0]), theta)
+    # TODO: Use SLERP to slowly interpolate the rotated foot locations between their tilted locations and normal locations when in stance
     rotated_foot_locations = rmat @ controller.foot_locations
 
-    # try:
     controller.joint_angles = four_legs_inverse_kinematics(
         rotated_foot_locations, robot_config
     )
-    # except Exception as e:
-    #     print("Exception: ", e)
 
     controller.ticks += 1
 

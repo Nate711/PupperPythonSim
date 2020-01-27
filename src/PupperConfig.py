@@ -66,7 +66,12 @@ class StanceParams:
     def default_stance(self):
         return np.array(
             [
-                [self.delta_x + self.x_shift, self.delta_x + self.x_shift, -self.delta_x + self.x_shift, -self.delta_x + self.x_shift],
+                [
+                    self.delta_x + self.x_shift,
+                    self.delta_x + self.x_shift,
+                    -self.delta_x + self.x_shift,
+                    -self.delta_x + self.x_shift,
+                ],
                 [-self.delta_y, self.delta_y, -self.delta_y, self.delta_y],
                 [0, 0, 0, 0],
             ]
@@ -81,11 +86,11 @@ class SwingParams:
         self.z_coeffs = None
         self.z_clearance = 0.01
         self.alpha = (
-            0.5
-        )  # Ratio between touchdown distance and total horizontal stance movement
+            0.5  # Ratio between touchdown distance and total horizontal stance movement
+        )
         self.beta = (
-            0.5
-        )  # Ratio between touchdown distance and total horizontal stance movement
+            0.5  # Ratio between touchdown distance and total horizontal stance movement
+        )
 
     @property
     def z_clearance(self):
@@ -118,11 +123,11 @@ class GaitParams:
             [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
         )
         self.overlap_time = (
-            0.35
-        )  # duration of the phase where all four feet are on the ground
+            0.35  # duration of the phase where all four feet are on the ground
+        )
         self.swing_time = (
-            0.1
-        )  # duration of the phase when only two feet are on the ground
+            0.1  # duration of the phase when only two feet are on the ground
+        )
 
     @property
     def overlap_ticks(self):
@@ -147,6 +152,13 @@ class GaitParams:
         return 2 * self.overlap_ticks + 2 * self.swing_ticks
 
 
+class IMUParams:
+    def __init__(self):
+        self.port = "/dev/cu.usbmodem63711001"
+        self.timeout = 0.0001
+        self.baudrate = 500000
+
+
 class PupperConfig:
     """Pupper hardware parameters
     """
@@ -158,11 +170,11 @@ class PupperConfig:
 
         # Robot geometry
         self.LEG_FB = 0.10  # front-back distance from center line to leg axis
-        self.LEG_LR = 0.04 #0.0419  # left-right distance from center line to leg plane
+        self.LEG_LR = 0.04  # left-right distance from center line to leg plane
         self.LEG_L = 0.125
         self.LEG_L2 = 0.125
         self.LEG_L1 = 0.1235
-        self.ABDUCTION_OFFSET = 0.03 #0.027  # distance from abduction axis to leg
+        self.ABDUCTION_OFFSET = 0.03  # distance from abduction axis to leg
         self.FOOT_RADIUS = 0.01
 
         self.HIP_L = 0.0394

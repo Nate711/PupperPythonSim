@@ -113,20 +113,20 @@ _ext indicates linear extension of the leg. Positive values = leg goes up
 </worldbody>
 
 <actuator>
-    <position gear="1" joint="fr_x" name="fr_x" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="fr_y" name="fr_y" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="fr_y2" name="fr_y2" kp="300" forcerange="-3.0 3.0"/>
+    <position gear="1" joint="fr_x" name="fr_x" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="fr_y" name="fr_y" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="fr_y2" name="fr_y2" kp="300" forcerange="-6.0 6.0"/>
 
-    <position gear="1" joint="fl_x" name="fl_x" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="fl_y" name="fl_y" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="fl_y2" name="fl_y2" kp="300" forcerange="-3.0 3.0"/>
+    <position gear="1" joint="fl_x" name="fl_x" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="fl_y" name="fl_y" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="fl_y2" name="fl_y2" kp="300" forcerange="-6.0 6.0"/>
 
-    <position gear="1" joint="br_x" name="br_x" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="br_y" name="br_y" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="br_y2" name="br_y2" kp="300" forcerange="-3.0 3.0"/>
+    <position gear="1" joint="br_x" name="br_x" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="br_y" name="br_y" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="br_y2" name="br_y2" kp="300" forcerange="-6.0 6.0"/>
 
-    <position gear="1" joint="bl_x" name="bl_x" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="bl_y" name="bl_y" kp="300" forcerange="-3.0 3.0"/>
-    <position gear="1" joint="bl_y2" name="bl_y2" kp="300" forcerange="-3.0 3.0"/>
+    <position gear="1" joint="bl_x" name="bl_x" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="bl_y" name="bl_y" kp="300" forcerange="-6.0 6.0"/>
+    <position gear="1" joint="bl_y2" name="bl_y2" kp="300" forcerange="-6.0 6.0"/>
     </actuator>
 </mujoco>
