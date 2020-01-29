@@ -5,7 +5,7 @@ from src.StanceController import stance_foot_location
 from src.SwingLegController import swing_foot_location
 
 import numpy as np
-from transforms3d.euler import euler2mat
+from transforms3d.euler import euler2mat, quat2euler
 from transforms3d.quaternions import qconjugate, quat2axangle
 from transforms3d.axangles import axangle2mat
 
@@ -108,9 +108,9 @@ def step_controller(controller, robot_config, quat_orientation):
         @ controller.foot_locations
     )
 
-    q_inv = qconjugate(quat_orientation)
-    (axis, theta) = quat2axangle(q_inv)
-    rmat = axangle2mat(axis * np.array([1, 1, 0]), theta)
+    (yaw, pitch, roll) = quat2euler(quat_orientation)
+    rmat = euler2mat(0, pitch, roll)
+    print(roll, pitch, yaw)
     # TODO: Use SLERP to slowly interpolate the rotated foot locations between their tilted locations and normal locations when in stance
     rotated_foot_locations = rmat @ controller.foot_locations
 
