@@ -153,8 +153,8 @@ class GaitParams:
 
 
 class IMUParams:
-    def __init__(self):
-        self.port = "/dev/cu.usbmodem63711001"
+    def __init__(self, port):
+        self.port = port
         self.timeout = 0.0001
         self.baudrate = 500000
 

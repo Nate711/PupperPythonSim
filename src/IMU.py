@@ -30,7 +30,12 @@ def read_orientation(serial_handle):
     while True:
         x = serial_handle.readline().decode("utf").strip()
         if x:
-            quat = np.array(x.split(","), dtype=np.float64)
+            parsed = x.split(",")
+            if len(parsed) < 4:
+                print("Did not receive 4 numbers in quat")
+                return None
+            print(parsed)
+            quat = np.array([parsed[3], parsed[0], parsed[1], parsed[2]], dtype=np.float64)
         else:
             return quat
 

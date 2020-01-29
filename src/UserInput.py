@@ -17,7 +17,7 @@ class UserInputs:
         self.udp_handle = UDPComms.Subscriber(udp_port, timeout=0.3)
 
 
-def get_input(user_input_obj):
+def get_input(user_input_obj, do_print=False):
     try:
         msg = user_input_obj.udp_handle.get()
         user_input_obj.x_vel = msg["y"] * 0.14
@@ -35,7 +35,8 @@ def get_input(user_input_obj):
         user_input_obj.previous_gait_toggle = user_input_obj.gait_toggle
 
     except UDPComms.timeout:
-        print("UDP Timed out")
+        if do_print:
+            print("UDP Timed out")
 
 
 def update_controller(controller, user_input_obj):
