@@ -109,8 +109,8 @@ def step_controller(controller, robot_config, quat_orientation):
     )
 
     (yaw, pitch, roll) = quat2euler(quat_orientation)
-    rmat = euler2mat(0, pitch, roll)
-    print(roll, pitch, yaw)
+    rmat = euler2mat(-roll, pitch, 0)
+    # print(roll, pitch, yaw)
     # TODO: Use SLERP to slowly interpolate the rotated foot locations between their tilted locations and normal locations when in stance
     rotated_foot_locations = rmat @ controller.foot_locations
 
