@@ -152,13 +152,6 @@ class GaitParams:
         return 2 * self.overlap_ticks + 2 * self.swing_ticks
 
 
-class IMUParams:
-    def __init__(self, port):
-        self.port = port
-        self.timeout = 0.0001
-        self.baudrate = 500000
-
-
 class PupperConfig:
     """Pupper hardware parameters
     """

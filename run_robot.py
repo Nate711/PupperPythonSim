@@ -3,7 +3,7 @@ import numpy as np
 import UDPComms
 import time
 import subprocess
-from src.IMU import create_imu_handle, read_orientation
+from src.IMU import IMU
 from src.Controller import step_controller, Controller
 from src.HardwareInterface import send_servo_commands, initialize_pwm
 from src.PupperConfig import (
@@ -14,7 +14,6 @@ from src.PupperConfig import (
     SwingParams,
     ServoParams,
     PWMParams,
-    IMUParams,
 )
 from src.UserInput import UserInputs, get_input, update_controller
 
@@ -39,9 +38,8 @@ def main():
     servo_params = ServoParams()
 
     # Create imu handle
-    imu_params = IMUParams("/dev/ttyACM0")
-    imu_handle = create_imu_handle(imu_params)
-    imu_handle.reset_input_buffer()
+    imu = IMU(port="/dev/ttyACM0")
+    imu.flush_buffer()
 
     # Create controller and user input handles
     controller = Controller(robot_config)
@@ -59,10 +57,7 @@ def main():
         update_controller(controller, user_input)
 
         # Read imu data. Orientation will be None if no data was available
-        quat_orientation = read_orientation(imu_handle)
-        print(quat_orientation)
-        if quat_orientation is None:
-            quat_orientation = np.array([1, 0, 0, 0])
+        quat_orientation = imu.read_orientation()
 
         # Step the controller forward by dt
         step_controller(controller, robot_config, quat_orientation)
