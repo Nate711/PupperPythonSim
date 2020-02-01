@@ -3,6 +3,8 @@
 ## Overview
 This repository contains Python code to run Pupper, a Raspberry Pi-based quadruped robot. In addition to the robot code, this repository also contains a wrapper to simulate the robot in MuJoCo or PyBullet using the same code that runs on the robot.
 
+Video of the robot following a QR code: https://www.youtube.com/watch?v=iyuJq_Pn7TM
+
 ## Installing and Running Code on the Raspberry Pi
 ### Materials
 - Raspberry Pi 4
