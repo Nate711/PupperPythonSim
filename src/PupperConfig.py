@@ -57,10 +57,10 @@ class StanceParams:
         self.z_time_constant = 0.02
         self.z_speed = 0.03  # maximum speed [m/s]
         self.pitch_time_constant = 0.5
-        self.roll_speed = 0.16  # maximum roll rate [rad/s]
+        self.roll_speed = 0.32  # maximum roll rate [rad/s]
         self.delta_x = 0.1
         self.delta_y = 0.10
-        self.x_shift = 0.0
+        self.x_shift = -0.02
 
     @property
     def default_stance(self):
@@ -84,7 +84,7 @@ class SwingParams:
 
     def __init__(self):
         self.z_coeffs = None
-        self.z_clearance = 0.01
+        self.z_clearance = 0.05
         self.alpha = (
             0.5  # Ratio between touchdown distance and total horizontal stance movement
         )
@@ -126,7 +126,7 @@ class GaitParams:
             0.35  # duration of the phase where all four feet are on the ground
         )
         self.swing_time = (
-            0.1  # duration of the phase when only two feet are on the ground
+            0.10  # duration of the phase when only two feet are on the ground
         )
 
     @property
@@ -164,7 +164,6 @@ class PupperConfig:
         # Robot geometry
         self.LEG_FB = 0.10  # front-back distance from center line to leg axis
         self.LEG_LR = 0.04  # left-right distance from center line to leg plane
-        self.LEG_L = 0.125
         self.LEG_L2 = 0.125
         self.LEG_L1 = 0.1235
         self.ABDUCTION_OFFSET = 0.03  # distance from abduction axis to leg
@@ -214,7 +213,7 @@ class PupperConfig:
 
         leg_z = 1e-6
         leg_mass = 0.010
-        leg_x = 1 / 12 * self.LEG_L ** 2 * leg_mass
+        leg_x = 1 / 12 * self.LEG_L1 ** 2 * leg_mass
         leg_y = leg_x
         self.LEG_INERTIA = (leg_x, leg_y, leg_z)
 

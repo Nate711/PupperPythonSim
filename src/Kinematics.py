@@ -2,28 +2,6 @@ import numpy as np
 from transforms3d.euler import euler2mat
 
 
-def leg_forward_kinematics(alpha, leg_index, config):
-    """Find the body-centric coordinates of a given foot given the joint angles.
-    
-    Parameters
-    ----------
-    alpha : Numpy array (3)
-        Joint angles ordered as (abduction, hip, knee)
-    leg_index : int
-        Leg index.
-    config : Config object
-        Robot parameters object
-    
-    Returns
-    -------
-    Numpy array (3)
-        Body-centric coordinates of the specified foot
-    """
-    y = config.ABDUCTION_OFFSET[leg_index]
-    unrotated_leg = np.array([0, y, -config.LEG_L + alpha[2]])
-    return euler2mat(alpha[0], alpha[1], "sxyz") * unrotated_leg
-
-
 def leg_explicit_inverse_kinematics(r_body_foot, leg_index, config):
     """Find the joint angles corresponding to the given body-relative foot position for a given leg and configuration
     

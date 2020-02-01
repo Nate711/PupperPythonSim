@@ -65,5 +65,4 @@ def main():
         # Update the pwm widths going to the servos
         send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
 
-
 main()
