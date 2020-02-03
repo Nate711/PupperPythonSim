@@ -115,11 +115,11 @@ def step_controller(controller, robot_config, quat_orientation):
         @ controller.foot_locations
     )
 
-    # (roll, pitch, yaw) = quat2euler(quat_orientation)
-    # roll = 0.9*np.clip(roll, -0.4, 0.4)
-    # pitch = 0.9*np.clip(pitch, -0.4, 0.4)
-    # rmat = euler2mat(roll, pitch, 0)
-    # rotated_foot_locations = rmat.T @ controller.foot_locations
+    (roll, pitch, yaw) = quat2euler(quat_orientation)
+    roll = 0.8*np.clip(roll, -0.4, 0.4)
+    pitch = 0.8*np.clip(pitch, -0.4, 0.4)
+    rmat = euler2mat(roll, pitch, 0)
+    rotated_foot_locations = rmat.T @ controller.foot_locations
 
     controller.joint_angles = four_legs_inverse_kinematics(
         rotated_foot_locations, robot_config

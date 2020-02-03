@@ -19,6 +19,7 @@ from src.UserInput import UserInputs, get_input, update_controller
 
 
 def start_pigpiod():
+    """Does not seem to work!"""
     subprocess.Popen(["sudo", "pkill", "pigpiod"])
     subprocess.Popen(["sudo", "pigpiod"])
 
@@ -28,7 +29,6 @@ def main():
     """
 
     # Start pwm to servos
-    # start_pigpiod()
     pi_board = pigpio.pi()
     pwm_params = PWMParams()
     initialize_pwm(pi_board, pwm_params)
@@ -47,8 +47,14 @@ def main():
 
     last_loop = time.time()
 
+    print("overlap time: ", controller.gait_params.overlap_time)
+    print("swing time: ", controller.gait_params.swing_time)
+    print("z clearance: ", controller.swing_params.z_clearance)
+    print("x shift: ", controller.stance_params.x_shift)
+
     while True:
-        if time.time() - last_loop < controller.gait_params.dt:
+        now = time.time()
+        if now - last_loop < controller.gait_params.dt:
             continue
         last_loop = time.time()
 

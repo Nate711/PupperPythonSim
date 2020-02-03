@@ -3,14 +3,14 @@ import numpy as np
 import time
 
 class IMU:
-    def __init__(self, port, baudrate=500000, timeout=0.0001):
+    def __init__(self, port, baudrate=500000):
         self.serial_handle = serial.Serial(
             port=port,
             baudrate=baudrate,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
-            timeout=timeout,
+            timeout=0,
         )
         self.last_quat = np.array([1, 0, 0, 0])
         self.start_time = time.time()
@@ -34,7 +34,7 @@ class IMU:
 
         while True:
             x = self.serial_handle.readline().decode("utf").strip()
-            if x is "":
+            if x is "" or x is None:
                 return self.last_quat
             else:
                 parsed = x.split(",")

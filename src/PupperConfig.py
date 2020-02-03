@@ -60,7 +60,7 @@ class StanceParams:
         self.roll_speed = 0.32  # maximum roll rate [rad/s]
         self.delta_x = 0.1
         self.delta_y = 0.10
-        self.x_shift = -0.02
+        self.x_shift = -0.00
 
     @property
     def default_stance(self):
@@ -123,10 +123,10 @@ class GaitParams:
             [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
         )
         self.overlap_time = (
-            0.35  # duration of the phase where all four feet are on the ground
+            0.10  # duration of the phase where all four feet are on the ground
         )
         self.swing_time = (
-            0.10  # duration of the phase when only two feet are on the ground
+            0.20  # duration of the phase when only two feet are on the ground
         )
 
     @property
