@@ -2,6 +2,7 @@ import serial
 import numpy as np
 import time
 
+
 class IMU:
     def __init__(self, port, baudrate=500000):
         self.serial_handle = serial.Serial(

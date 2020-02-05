@@ -45,9 +45,11 @@ def update_controller(controller, user_input_obj):
     )
     controller.movement_reference.wz_ref = user_input_obj.yaw_rate
 
-    message_dt = 1.0 / user_input_obj.message_rate 
+    message_dt = 1.0 / user_input_obj.message_rate
     alpha = message_dt / controller.stance_params.pitch_time_constant
-    controller.movement_reference.pitch = controller.movement_reference.pitch * (1 - alpha) + user_input_obj.pitch * alpha
+    controller.movement_reference.pitch = (
+        controller.movement_reference.pitch * (1 - alpha) + user_input_obj.pitch * alpha
+    )
 
     if user_input_obj.gait_mode == 0:
         controller.gait_params.contact_phases = np.array(
@@ -59,5 +61,9 @@ def update_controller(controller, user_input_obj):
         )
 
     # Note this is negative since it is the feet relative to the body
-    controller.movement_reference.z_ref -= controller.stance_params.z_speed * message_dt * user_input_obj.stance_movement
-    controller.movement_reference.roll += controller.stance_params.roll_speed * message_dt * user_input_obj.roll_movement
+    controller.movement_reference.z_ref -= (
+        controller.stance_params.z_speed * message_dt * user_input_obj.stance_movement
+    )
+    controller.movement_reference.roll += (
+        controller.stance_params.roll_speed * message_dt * user_input_obj.roll_movement
+    )
