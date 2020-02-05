@@ -32,7 +32,9 @@ def leg_explicit_inverse_kinematics(r_body_foot, leg_index, config):
 
     # Interior angle of the right triangle formed in the y-z plane by the leg that is coincident to the ab/adduction axis
     # For feet 2 (front left) and 4 (back left), the abduction offset is positive, for the right feet, the abduction offset is negative.
-    phi = np.arccos(config.ABDUCTION_OFFSETS[leg_index] / R_body_foot_yz)
+    arccos_argument = config.ABDUCTION_OFFSETS[leg_index] / R_body_foot_yz
+    arccos_argument = np.clip(arccos_argument, -0.99, 0.99)
+    phi = np.arccos(arccos_argument)
 
     # Angle of the y-z projection of the hip-to-foot vector, relative to the positive y-axis
     hip_foot_angle = np.arctan2(z, y)
@@ -47,19 +49,17 @@ def leg_explicit_inverse_kinematics(r_body_foot, leg_index, config):
     R_hip_foot = (R_hip_foot_yz ** 2 + x ** 2) ** 0.5
 
     # Angle between the line going from hip to foot and the link L1
-    trident = np.arccos(
-        (config.LEG_L1 ** 2 + R_hip_foot ** 2 - config.LEG_L2 ** 2)
-        / (2 * config.LEG_L1 * R_hip_foot)
-    )
+    arccos_argument = (config.LEG_L1 ** 2 + R_hip_foot ** 2 - config.LEG_L2 ** 2) / (2 * config.LEG_L1 * R_hip_foot)
+    arccos_argument = np.clip(arccos_argument, -0.99, 0.99)
+    trident = np.arccos(arccos_argument)
 
     # Angle of the first link relative to the tilted negative z axis
     hip_angle = theta + trident
 
     # Angle between the leg links L1 and L2
-    beta = np.arccos(
-        (config.LEG_L1 ** 2 + config.LEG_L2 ** 2 - R_hip_foot ** 2)
-        / (2 * config.LEG_L1 * config.LEG_L2)
-    )
+    arccos_argument = (config.LEG_L1 ** 2 + config.LEG_L2 ** 2 - R_hip_foot ** 2) / (2 * config.LEG_L1 * config.LEG_L2)
+    arccos_argument = np.clip(arccos_argument, -0.99, 0.99)
+    beta = np.arccos(arccos_argument)
 
     # Angle of the second link relative to the tilted negative z axis
     knee_angle = hip_angle - (np.pi - beta)

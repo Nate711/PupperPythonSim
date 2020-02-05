@@ -60,7 +60,7 @@ class StanceParams:
         self.roll_speed = 0.32  # maximum roll rate [rad/s]
         self.delta_x = 0.1
         self.delta_y = 0.10
-        self.x_shift = -0.00
+        self.x_shift = -0.01
 
     @property
     def default_stance(self):
