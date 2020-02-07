@@ -3,6 +3,13 @@ from scipy.linalg import solve
 from src.RobotConfig import MICROS_PER_RAD, NEUTRAL_ANGLE_DEGREES
 
 
+class UserInputParams:
+    def __init__(self):
+        self.max_x_velocity = 0.5
+        self.max_y_velocity = 0.24
+        self.max_yaw_rate = 0.2
+        self.max_pitch = 30.0 * np.pi / 180.0
+
 class PWMParams:
     def __init__(self):
         self.pins = np.array([[2, 14, 18, 23], [3, 15, 27, 24], [4, 17, 22, 25]])

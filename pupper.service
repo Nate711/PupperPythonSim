@@ -1,0 +1,10 @@
+[Unit]
+Description=Pupper control service
+Requires=joystick.service
+After=joystick.service
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/PupperPythonSim/run_robot.py
+
+[Install]
+WantedBy=multi-user.target
