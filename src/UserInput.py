@@ -2,6 +2,9 @@ import UDPComms
 import numpy as np
 
 class UserInputs:
+    TROT_STATE = 0
+    HOP_STATE = 1
+    REST_STATE = 2
     def __init__(self, max_x_velocity, max_y_velocity, max_yaw_rate, max_pitch, udp_port=8830):
         self.max_x_velocity = max_x_velocity
         self.max_y_velocity = max_y_velocity
@@ -43,11 +46,14 @@ def get_input(user_input_obj, do_print=False):
         user_input_obj.hop_toggle = msg["x"]
 
         # Update gait mode
-        if user_input_obj.previous_state == 0:
+        if user_input_obj.previous_state == TROT_STATE:
             if user_input_obj.gait_toggle == 1:
-                user_input_obj.current_state = 2
+                user_input_obj.current_state = REST_STATE
+        if user_input_obj.previous_state == REST_STATE:
+            if user_input_obj.gait_toggle == 1:
+                user_input_obj.current_state = TROT_STATE
         if user_input_obj.hop_toggle == 1:
-            user_input_obj.current_state = 1
+            user_input_obj.current_state = HOP_STATE
             
         user_input_obj.previous_state = user_input_obj.current_state
 
@@ -76,11 +82,8 @@ def update_controller(controller, user_input_obj):
         controller.gait_params.contact_phases = np.array(
             [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
         )
-        #0 is trotting
-        #1 is hopping 
-        #2 is resting
-    if user_input_obj.hop == 1:
-        controller.special_movement = 1
+
+    controller.special_movement = user_input_obj.current_state
     # Note this is negative since it is the feet relative to the body
     controller.movement_reference.z_ref -= (
         controller.stance_params.z_speed * message_dt * user_input_obj.stance_movement
