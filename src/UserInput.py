@@ -18,7 +18,8 @@ class UserInputs:
 
         self.gait_toggle = 0
         self.gait_mode = 0
-        self.previous_gait_toggle = 0
+        self.previous_state = 0
+        self.current_state = 0
 
         self.activate = 0
         self.last_activate = 0
@@ -39,11 +40,16 @@ def get_input(user_input_obj, do_print=False):
         user_input_obj.stance_movement = msg["dpady"]
         user_input_obj.roll_movement = msg["dpadx"]
         user_input_obj.message_rate = msg["message_rate"]
+        user_input_obj.hop_toggle = msg["x"]
 
         # Update gait mode
-        if user_input_obj.previous_gait_toggle == 0 and user_input_obj.gait_toggle == 1:
-            user_input_obj.gait_mode = not user_input_obj.gait_mode
-        user_input_obj.previous_gait_toggle = user_input_obj.gait_toggle
+        if user_input_obj.previous_state == 0:
+            if user_input_obj.gait_toggle == 1:
+                user_input_obj.current_state = 2
+        if user_input_obj.hop_toggle == 1:
+            user_input_obj.current_state = 1
+            
+        user_input_obj.previous_state = user_input_obj.current_state
 
     except UDPComms.timeout:
         if do_print:
@@ -70,7 +76,11 @@ def update_controller(controller, user_input_obj):
         controller.gait_params.contact_phases = np.array(
             [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
         )
-
+        #0 is trotting
+        #1 is hopping 
+        #2 is resting
+    if user_input_obj.hop == 1:
+        controller.special_movement = 1
     # Note this is negative since it is the feet relative to the body
     controller.movement_reference.z_ref -= (
         controller.stance_params.z_speed * message_dt * user_input_obj.stance_movement

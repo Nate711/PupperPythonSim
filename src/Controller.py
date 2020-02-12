@@ -21,6 +21,8 @@ class Controller:
         self.movement_reference = MovementReference()
         self.previous_rpy = (0, 0, 0)
 
+        self.special_movement = 0
+
         self.ticks = 0
 
         # Set default for foot locations and joint angles
@@ -92,39 +94,56 @@ def step_controller(controller, robot_config, quat_orientation):
     controller : Controller
         Robot controller object.
     """
-    controller.foot_locations = step(
-        controller.ticks,
-        controller.foot_locations,
-        controller.swing_params,
-        controller.stance_params,
-        controller.gait_params,
-        controller.movement_reference,
-    )
-
-    # controller.foot_locations = (
-    #     controller.stance_params.default_stance
-    #     + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
-    # )
-    # controller.foot_locations[2, :] += np.array([0, 0.05, 0.05, 0.0])
-
-    # Apply the desired body rotation
-    rotated_foot_locations = (
-        euler2mat(
-            controller.movement_reference.roll, controller.movement_reference.pitch, 0.0
+    if special_movement != 1:
+        controller.foot_locations = step(
+            controller.ticks,
+            controller.foot_locations,
+            controller.swing_params,
+            controller.stance_params,
+            controller.gait_params,
+            controller.movement_reference,
         )
-        @ controller.foot_locations
-    )
+        
 
-    (roll, pitch, yaw) = quat2euler(quat_orientation)
-    roll = 0.8 * np.clip(roll, -0.4, 0.4)
-    pitch = 0.8 * np.clip(pitch, -0.4, 0.4)
-    rmat = euler2mat(roll, pitch, 0)
-    rotated_foot_locations = rmat.T @ rotated_foot_locations
+        # controller.foot_locations = (
+        #     controller.stance_params.default_stance
+        #     + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
+        # )
+        # controller.foot_locations[2, :] += np.array([0, 0.05, 0.05, 0.0])
 
-    controller.joint_angles = four_legs_inverse_kinematics(
-        rotated_foot_locations, robot_config
-    )
+        # Apply the desired body rotation
+        rotated_foot_locations = (
+            euler2mat(
+                controller.movement_reference.roll, controller.movement_reference.pitch, 0.0
+            )
+            @ controller.foot_locations
+        )
 
+        (roll, pitch, yaw) = quat2euler(quat_orientation)
+        roll = 0.8 * np.clip(roll, -0.4, 0.4)
+        pitch = 0.8 * np.clip(pitch, -0.4, 0.4)
+        rmat = euler2mat(roll, pitch, 0)
+        rotated_foot_locations = rmat.T @ rotated_foot_locations
+        controller.joint_angles = four_legs_inverse_kinematics(
+            rotated_foot_locations, robot_config
+        )
+
+    elif special_movement == 1:
+        hop_foot_locations = (
+             controller.stance_params.default_stance
+             + np.array([0, 0, -0.04])[:, np.newaxis]
+        )
+        controller.joint_angles = four_legs_inverse_kinematics(
+            hop_foot_locations, robot_config
+        )
+
+    elif special_movement == 2:
+        controller.foot_locations = (
+            controller.stance_params.default_stance
+            + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
+        )
+        controller.foot_locations[2, :] += np.array([0, 0.05, 0.05, 0.0])
+    
     controller.ticks += 1
 
 
