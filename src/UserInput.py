@@ -1,5 +1,6 @@
 import UDPComms
 import numpy as np
+import time
 
 class UserInputs:
     def __init__(self, max_x_velocity, max_y_velocity, max_yaw_rate, max_pitch, udp_port=8830):
@@ -16,14 +17,20 @@ class UserInputs:
         self.stance_movement = 0
         self.roll_movement = 0
 
-        self.gait_toggle = 0
-        self.gait_mode = 0
-        self.previous_state = 0
-        self.current_state = 0
-
         self.TROT_STATE = 0
         self.HOP_STATE = 1
         self.REST_STATE = 2
+
+        self.gait_toggle = 0
+        self.previous_gait_toggle = 0
+        self.gait_mode = 0
+
+        self.previous_state = self.TROT_STATE
+        self.current_state = self.TROT_STATE
+
+        self.previous_hop_toggle = 0
+        self.hop_toggle = 0
+        self.hop_begin_time = 0
 
         self.activate = 0
         self.last_activate = 0
@@ -48,18 +55,19 @@ def get_input(user_input_obj, do_print=False):
 
         # Update gait mode
         if user_input_obj.previous_state == user_input_obj.TROT_STATE:
-            if user_input_obj.gait_toggle == 1:
+            if user_input_obj.gait_toggle == 1 and  user_input_obj.previous_gait_toggle == 0:
                 user_input_obj.current_state = user_input_obj.REST_STATE
             # need to keep track of previous value of gait_toggle
         if user_input_obj.previous_state == user_input_obj.REST_STATE:
-            if user_input_obj.gait_toggle == 1:
+            if user_input_obj.gait_toggle == 1 and user_input_obj.previous_gait_toggle == 0:
                 user_input_obj.current_state = user_input_obj.TROT_STATE
-        if user_input_obj.hop_toggle == 1:
+        if user_input_obj.hop_toggle == 1 and user_input_obj.previous_hop_toggle == 0:
             user_input_obj.current_state = user_input_obj.HOP_STATE
-            # need to keep track when hopping started
-            # need to keep track of previous state of hop_toggle
+            user_input_obj.hop_begin_time = time.time()
             
         user_input_obj.previous_state = user_input_obj.current_state
+        user_input_obj.previous_gait_toggle = user_input_obj.gait_toggle
+        user_input_obj.previous_hop_toggle = user_input_obj.hop_toggle
 
     except UDPComms.timeout:
         if do_print:
