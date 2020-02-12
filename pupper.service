@@ -4,7 +4,10 @@ Requires=joystick.service
 After=joystick.service
 
 [Service]
+ExecStartPre=sudo pigpiod
 ExecStart=/usr/bin/python3 /home/pi/PupperPythonSim/run_robot.py
+KillSignal=2
+TimeoutStopSec=10
 
 [Install]
 WantedBy=multi-user.target

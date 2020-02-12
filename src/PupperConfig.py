@@ -127,7 +127,10 @@ class GaitParams:
         self.dt = 0.01
         self.num_phases = 4
         self.contact_phases = np.array(
-            [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
+            [[1, 1, 1, 0], 
+            [1, 0, 1, 1], 
+            [1, 0, 1, 1], 
+            [1, 1, 1, 0]]
         )
         self.overlap_time = (
             0.10  # duration of the phase where all four feet are on the ground
@@ -171,7 +174,7 @@ class PupperConfig:
         # Robot geometry
         self.LEG_FB = 0.10  # front-back distance from center line to leg axis
         self.LEG_LR = 0.04  # left-right distance from center line to leg plane
-        self.LEG_L2 = 0.125
+        self.LEG_L2 = 0.115
         self.LEG_L1 = 0.1235
         self.ABDUCTION_OFFSET = 0.03  # distance from abduction axis to leg
         self.FOOT_RADIUS = 0.01

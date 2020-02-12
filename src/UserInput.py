@@ -2,9 +2,6 @@ import UDPComms
 import numpy as np
 
 class UserInputs:
-    TROT_STATE = 0
-    HOP_STATE = 1
-    REST_STATE = 2
     def __init__(self, max_x_velocity, max_y_velocity, max_yaw_rate, max_pitch, udp_port=8830):
         self.max_x_velocity = max_x_velocity
         self.max_y_velocity = max_y_velocity
@@ -23,6 +20,10 @@ class UserInputs:
         self.gait_mode = 0
         self.previous_state = 0
         self.current_state = 0
+
+        self.TROT_STATE = 0
+        self.HOP_STATE = 1
+        self.REST_STATE = 2
 
         self.activate = 0
         self.last_activate = 0
@@ -46,14 +47,17 @@ def get_input(user_input_obj, do_print=False):
         user_input_obj.hop_toggle = msg["x"]
 
         # Update gait mode
-        if user_input_obj.previous_state == TROT_STATE:
+        if user_input_obj.previous_state == user_input_obj.TROT_STATE:
             if user_input_obj.gait_toggle == 1:
-                user_input_obj.current_state = REST_STATE
-        if user_input_obj.previous_state == REST_STATE:
+                user_input_obj.current_state = user_input_obj.REST_STATE
+            # need to keep track of previous value of gait_toggle
+        if user_input_obj.previous_state == user_input_obj.REST_STATE:
             if user_input_obj.gait_toggle == 1:
-                user_input_obj.current_state = TROT_STATE
+                user_input_obj.current_state = user_input_obj.TROT_STATE
         if user_input_obj.hop_toggle == 1:
-            user_input_obj.current_state = HOP_STATE
+            user_input_obj.current_state = user_input_obj.HOP_STATE
+            # need to keep track when hopping started
+            # need to keep track of previous state of hop_toggle
             
         user_input_obj.previous_state = user_input_obj.current_state
 
@@ -74,16 +78,16 @@ def update_controller(controller, user_input_obj):
         controller.movement_reference.pitch * (1 - alpha) + user_input_obj.pitch * alpha
     )
 
-    if user_input_obj.gait_mode == 0:
-        controller.gait_params.contact_phases = np.array(
-            [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
-        )
-    else:
-        controller.gait_params.contact_phases = np.array(
-            [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
-        )
+    # if user_input_obj.gait_mode == 0:
+    #     controller.gait_params.contact_phases = np.array(
+    #         [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
+    #     )
+    # else:
+    #     controller.gait_params.contact_phases = np.array(
+    #         [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
+    #     )
 
-    controller.special_movement = user_input_obj.current_state
+    controller.state = user_input_obj.current_state
     # Note this is negative since it is the feet relative to the body
     controller.movement_reference.z_ref -= (
         controller.stance_params.z_speed * message_dt * user_input_obj.stance_movement

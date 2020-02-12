@@ -5,7 +5,7 @@ import time
 import subprocess
 from src.IMU import IMU
 from src.Controller import step_controller, Controller
-from src.HardwareInterface import send_servo_commands, initialize_pwm
+from src.HardwareInterface import send_servo_commands, initialize_pwm, deactivate_servos
 from src.PupperConfig import (
     PupperConfig,
     MovementReference,
@@ -20,21 +20,25 @@ from src.UserInput import UserInputs, get_input, update_controller
 
 
 def start_pigpiod():
-    """Does not seem to work!"""
+    print("Starting pigpiod...")    
     subprocess.Popen(["sudo", "pigpiod"])
     time.sleep(2)
+    print("Done.")
+
 
 def stop_pigpiod():
+    print("Killing pigpiod...")
     subprocess.Popen(["sudo", "pkill", "pigpiod"])
+    time.sleep(2)
+    print("Done.")
+
 
 def main():
     """Main program
     """
-    print("Starting pigpiod...")
-    start_pigpiod()
-    print("Done.")
 
     # Start pwm to servos
+    # start_pigpiod()
     pi_board = pigpio.pi()
     pwm_params = PWMParams()
     initialize_pwm(pi_board, pwm_params)
@@ -62,37 +66,39 @@ def main():
 
     # Wait until the activate button has been pressed
     while True:
-        get_input(user_input)
-        if user_input.activate:
-            user_input.last_activate = 1
-            break
-
-    while True:
-        now = time.time()
-        if now - last_loop < controller.gait_params.dt:
-            continue
-        last_loop = time.time()
-
-        # Parse the udp joystick commands and then update the robot controller's parameters
-        get_input(user_input)
-        if user_input.activate == 1 and user_input.last_activate == 0:
-            break
-        else:
+        print("Waiting for L1 to activate robot.")
+        while True:
+            get_input(user_input)
+            if user_input.activate == 1 and user_input.last_activate == 0:
+                user_input.last_activate = 1
+                break
             user_input.last_activate = user_input.activate
+        print("Robot activated.")
 
-        update_controller(controller, user_input)
+        while True:
+            now = time.time()
+            if now - last_loop < controller.gait_params.dt:
+                continue
+            last_loop = time.time()
 
-        # Read imu data. Orientation will be None if no data was available
-        quat_orientation = imu.read_orientation()
+            # Parse the udp joystick commands and then update the robot controller's parameters
+            get_input(user_input)
+            if user_input.activate == 1 and user_input.last_activate == 0:
+                user_input.last_activate = 1
+                break
+            else:
+                user_input.last_activate = user_input.activate
 
-        # Step the controller forward by dt
-        step_controller(controller, robot_config, quat_orientation)
+            update_controller(controller, user_input)
 
-        # Update the pwm widths going to the servos
-        send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
-    
-    print("Killing pigpiod...")
-    stop_pigpiod()
-    print("Done.")
+            # Read imu data. Orientation will be None if no data was available
+            quat_orientation = imu.read_orientation()
 
+            # Step the controller forward by dt
+            step_controller(controller, robot_config, quat_orientation)
+
+            # Update the pwm widths going to the servos
+            send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)
+        deactivate_servos(pi_board, pwm_params)
 main()
+

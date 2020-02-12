@@ -21,7 +21,7 @@ class Controller:
         self.movement_reference = MovementReference()
         self.previous_rpy = (0, 0, 0)
 
-        self.special_movement = 0
+        self.state = 0
 
         self.ticks = 0
 
@@ -94,7 +94,7 @@ def step_controller(controller, robot_config, quat_orientation):
     controller : Controller
         Robot controller object.
     """
-    if special_movement != 1:
+    if controller.state == 0:
         controller.foot_locations = step(
             controller.ticks,
             controller.foot_locations,
@@ -104,7 +104,6 @@ def step_controller(controller, robot_config, quat_orientation):
             controller.movement_reference,
         )
         
-
         # controller.foot_locations = (
         #     controller.stance_params.default_stance
         #     + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
@@ -128,7 +127,7 @@ def step_controller(controller, robot_config, quat_orientation):
             rotated_foot_locations, robot_config
         )
 
-    elif special_movement == 1:
+    elif controller.state == 1:
         hop_foot_locations = (
              controller.stance_params.default_stance
              + np.array([0, 0, -0.04])[:, np.newaxis]
@@ -137,12 +136,14 @@ def step_controller(controller, robot_config, quat_orientation):
             hop_foot_locations, robot_config
         )
 
-    elif special_movement == 2:
+    elif controller.state == 2:
         controller.foot_locations = (
             controller.stance_params.default_stance
             + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
         )
-        controller.foot_locations[2, :] += np.array([0, 0.05, 0.05, 0.0])
+        controller.joint_angles = four_legs_inverse_kinematics(
+            controller.foot_locations, robot_config
+        )
     
     controller.ticks += 1
 
