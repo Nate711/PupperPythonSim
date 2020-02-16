@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.linalg import solve
 from src.RobotConfig import MICROS_PER_RAD, NEUTRAL_ANGLE_DEGREES
-
+from enum import Enum
 
 class UserInputParams:
     def __init__(self):
@@ -32,6 +32,12 @@ class ServoParams:
     @property
     def neutral_angles(self):
         return self.neutral_angle_degrees * np.pi / 180.0  # Convert to radians
+
+
+class BehaviorState(Enum):
+    REST = 0
+    TROT = 1
+    HOP = 2
 
 
 class MovementCommand:

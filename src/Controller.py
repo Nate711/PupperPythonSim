@@ -9,6 +9,7 @@ from transforms3d.euler import euler2mat, quat2euler
 from transforms3d.quaternions import qconjugate, quat2axangle
 from transforms3d.axangles import axangle2mat
 
+from src.PupperConfig import BehaviorState
 
 class Controller:
     """Controller and planner object
@@ -21,7 +22,7 @@ class Controller:
         self.movement_reference = MovementReference()
         self.previous_rpy = (0, 0, 0)
 
-        self.state = 0
+        self.state = BehaviorState.REST
 
         self.ticks = 0
 
@@ -94,7 +95,7 @@ def step_controller(controller, robot_config, quat_orientation):
     controller : Controller
         Robot controller object.
     """
-    if controller.state == 0:
+    if controller.state == BehaviorState.TROT:
         controller.foot_locations = step(
             controller.ticks,
             controller.foot_locations,
@@ -103,12 +104,6 @@ def step_controller(controller, robot_config, quat_orientation):
             controller.gait_params,
             controller.movement_reference,
         )
-        
-        # controller.foot_locations = (
-        #     controller.stance_params.default_stance
-        #     + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]
-        # )
-        # controller.foot_locations[2, :] += np.array([0, 0.05, 0.05, 0.0])
 
         # Apply the desired body rotation
         rotated_foot_locations = (
@@ -127,16 +122,16 @@ def step_controller(controller, robot_config, quat_orientation):
             rotated_foot_locations, robot_config
         )
 
-    elif controller.state == 1:
+    elif controller.state == BehaviorState.HOP:
         hop_foot_locations = (
              controller.stance_params.default_stance
-             + np.array([0, 0, -0.04])[:, np.newaxis]
+             + np.array([0, 0, -0.10])[:, np.newaxis]
         )
         controller.joint_angles = four_legs_inverse_kinematics(
             hop_foot_locations, robot_config
         )
 
-    elif controller.state == 2:
+    elif controller.state == BehaviorState.REST:
         controller.foot_locations = (
             controller.stance_params.default_stance
             + np.array([0, 0, controller.movement_reference.z_ref])[:, np.newaxis]

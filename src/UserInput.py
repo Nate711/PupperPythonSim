@@ -1,6 +1,7 @@
 import UDPComms
 import numpy as np
 import time
+from src.PupperConfig import BehaviorState
 
 class UserInputs:
     def __init__(self, max_x_velocity, max_y_velocity, max_yaw_rate, max_pitch, udp_port=8830):
@@ -17,16 +18,12 @@ class UserInputs:
         self.stance_movement = 0
         self.roll_movement = 0
 
-        self.TROT_STATE = 0
-        self.HOP_STATE = 1
-        self.REST_STATE = 2
-
         self.gait_toggle = 0
         self.previous_gait_toggle = 0
         self.gait_mode = 0
 
-        self.previous_state = self.TROT_STATE
-        self.current_state = self.TROT_STATE
+        self.previous_state = BehaviorState.REST
+        self.current_state = BehaviorState.REST
 
         self.previous_hop_toggle = 0
         self.hop_toggle = 0
@@ -53,18 +50,22 @@ def get_input(user_input_obj, do_print=False):
         user_input_obj.message_rate = msg["message_rate"]
         user_input_obj.hop_toggle = msg["x"]
 
-        # Update gait mode
-        if user_input_obj.previous_state == user_input_obj.TROT_STATE:
-            if user_input_obj.gait_toggle == 1 and  user_input_obj.previous_gait_toggle == 0:
-                user_input_obj.current_state = user_input_obj.REST_STATE
-            # need to keep track of previous value of gait_toggle
-        if user_input_obj.previous_state == user_input_obj.REST_STATE:
-            if user_input_obj.gait_toggle == 1 and user_input_obj.previous_gait_toggle == 0:
-                user_input_obj.current_state = user_input_obj.TROT_STATE
+        # Check if requesting a state transition to trotting, or from trotting to resting
+        if user_input_obj.gait_toggle == 1 and user_input_obj.previous_gait_toggle == 0:
+            if user_input_obj.previous_state == BehaviorState.TROT:
+                user_input_obj.current_state = BehaviorState.REST
+            elif user_input_obj.previous_state == BehaviorState.REST:
+                user_input_obj.current_state = BehaviorState.TROT
+        
+        # Check if requesting a state transition to hopping, from trotting or resting
         if user_input_obj.hop_toggle == 1 and user_input_obj.previous_hop_toggle == 0:
-            user_input_obj.current_state = user_input_obj.HOP_STATE
-            user_input_obj.hop_begin_time = time.time()
-            
+            if user_input_obj.current_state == BehaviorState.HOP:
+                user_input_obj.current_state = BehaviorState.REST
+            elif user_input_obj.current_state == BehaviorState.REST:
+                user_input_obj.current_state = BehaviorState.HOP
+                user_input_obj.hop_begin_time = time.time()
+        
+        # Update previous values for toggles and state
         user_input_obj.previous_state = user_input_obj.current_state
         user_input_obj.previous_gait_toggle = user_input_obj.gait_toggle
         user_input_obj.previous_hop_toggle = user_input_obj.hop_toggle
@@ -86,16 +87,8 @@ def update_controller(controller, user_input_obj):
         controller.movement_reference.pitch * (1 - alpha) + user_input_obj.pitch * alpha
     )
 
-    # if user_input_obj.gait_mode == 0:
-    #     controller.gait_params.contact_phases = np.array(
-    #         [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
-    #     )
-    # else:
-    #     controller.gait_params.contact_phases = np.array(
-    #         [[1, 1, 1, 0], [1, 0, 1, 1], [1, 0, 1, 1], [1, 1, 1, 0]]
-    #     )
-
     controller.state = user_input_obj.current_state
+    
     # Note this is negative since it is the feet relative to the body
     controller.movement_reference.z_ref -= (
         controller.stance_params.z_speed * message_dt * user_input_obj.stance_movement
