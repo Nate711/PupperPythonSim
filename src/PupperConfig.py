@@ -69,8 +69,10 @@ class StanceParams:
     def __init__(self):
         self.z_time_constant = 0.02
         self.z_speed = 0.03  # maximum speed [m/s]
-        self.pitch_time_constant = 0.5
-        self.roll_speed = 0.32  # maximum roll rate [rad/s]
+        self.pitch_deadband = 0.02
+        self.pitch_time_constant = 0.25
+        self.max_pitch_rate = 0.15
+        self.roll_speed = 0.16  # maximum roll rate [rad/s]
         self.delta_x = 0.1
         self.delta_y = 0.10
         self.x_shift = -0.01

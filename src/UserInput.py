@@ -2,6 +2,7 @@ import UDPComms
 import numpy as np
 import time
 from src.PupperConfig import BehaviorState
+from src.Utilities import deadband, clipped_first_order_filter
 
 class UserInputs:
     def __init__(self, max_x_velocity, max_y_velocity, max_yaw_rate, max_pitch, udp_port=8830):
@@ -42,7 +43,7 @@ def get_input(user_input_obj, do_print=False):
         user_input_obj.x_vel = msg["ly"] * 0.5
         user_input_obj.y_vel = msg["lx"] * -0.24
         user_input_obj.yaw_rate = msg["rx"] * -2.0
-        user_input_obj.pitch = msg["ry"] * 30 * np.pi / 180.0
+        user_input_obj.pitch = msg["ry"] * 40 * np.pi / 180.0
         user_input_obj.gait_toggle = msg["R1"]
         user_input_obj.activate = msg["L1"]
         user_input_obj.stance_movement = msg["dpady"]
@@ -82,10 +83,11 @@ def update_controller(controller, user_input_obj):
     controller.movement_reference.wz_ref = user_input_obj.yaw_rate
 
     message_dt = 1.0 / user_input_obj.message_rate
-    alpha = message_dt / controller.stance_params.pitch_time_constant
-    controller.movement_reference.pitch = (
-        controller.movement_reference.pitch * (1 - alpha) + user_input_obj.pitch * alpha
-    )
+
+    # TODO: Put this filter code somewhere else
+    deadbanded_pitch = deadband(user_input_obj.pitch, controller.stance_params.pitch_deadband)
+    pitch_rate = clipped_first_order_filter(controller.movement_reference.pitch, deadbanded_pitch, controller.stance_params.max_pitch_rate, controller.stance_params.pitch_time_constant)
+    controller.movement_reference.pitch += message_dt * pitch_rate
 
     controller.state = user_input_obj.current_state
     
