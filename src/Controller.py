@@ -134,7 +134,7 @@ def step_controller(controller, robot_config, quat_orientation):
     elif controller.state == BehaviorState.HOP:
         hop_foot_locations = (
              controller.stance_params.default_stance
-             + np.array([0, 0, -0.12])[:, np.newaxis]
+             + np.array([0, 0, -0.1])[:, np.newaxis]
         )
         controller.joint_angles = four_legs_inverse_kinematics(
             hop_foot_locations, robot_config
@@ -143,7 +143,7 @@ def step_controller(controller, robot_config, quat_orientation):
     elif controller.state == BehaviorState.FINISHHOP:
         hop_foot_locations = (
              controller.stance_params.default_stance
-             + np.array([0, 0, -.2])[:, np.newaxis]
+             + np.array([0, 0, -.22])[:, np.newaxis]
         )
         controller.joint_angles = four_legs_inverse_kinematics(
             hop_foot_locations, robot_config
