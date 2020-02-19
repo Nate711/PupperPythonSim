@@ -65,7 +65,7 @@ def get_input(user_input_obj, do_print=False):
             elif user_input_obj.current_state == BehaviorState.REST:
                 user_input_obj.current_state = BehaviorState.HOP
             elif user_input_obj.current_state == BehaviorState.FINISHHOP:
-                user_input_obj.current_state == BehaviorState.REST
+                user_input_obj.current_state = BehaviorState.REST
 
         # Update previous values for toggles and state
         user_input_obj.previous_state = user_input_obj.current_state
