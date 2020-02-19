@@ -108,22 +108,27 @@ def step_controller(controller, robot_config, quat_orientation):
         )
 
         # Apply the desired body rotation
-        # rotated_foot_locations = (
+        # foot_locations = (
         #     euler2mat(
         #         controller.movement_reference.roll, controller.movement_reference.pitch, 0.0
         #     )
         #     @ controller.foot_locations
         # )
         # Disable joystick-based pitch and roll for trotting with IMU feedback
-        rotated_foot_locations = controller.foot_locations  
+        foot_locations = controller.foot_locations  
 
+        # Construct foot rotation matrix to compensate for body tilt
         (roll, pitch, yaw) = quat2euler(quat_orientation)
-        roll = 0.8 * np.clip(roll, -0.4, 0.4)
-        pitch = 0.8 * np.clip(pitch, -0.4, 0.4)
-        rmat = euler2mat(roll, pitch, 0)
-        rotated_foot_locations = rmat.T @ rotated_foot_locations
+        correction_factor = 0.8
+        max_tilt = 0.4
+        roll_compensation = correction_factor * np.clip(roll, -max_tilt, max_tilt)
+        pitch_compensation = correction_factor * np.clip(pitch, -max_tilt, max_tilt)
+        rmat = euler2mat(roll_compensation, pitch_compensation, 0)
+
+        foot_locations = rmat.T @ foot_locations
+        
         controller.joint_angles = four_legs_inverse_kinematics(
-            rotated_foot_locations, robot_config
+            foot_locations, robot_config
         )
 
     elif controller.state == BehaviorState.HOP:
