@@ -38,6 +38,7 @@ class BehaviorState(Enum):
     REST = 0
     TROT = 1
     HOP = 2
+    FINISHHOP = 3
 
 
 class MovementCommand:
@@ -135,9 +136,9 @@ class GaitParams:
         self.dt = 0.01
         self.num_phases = 4
         self.contact_phases = np.array(
-            [[1, 1, 1, 0], 
-            [1, 0, 1, 1], 
-            [1, 0, 1, 1], 
+            [[1, 1, 1, 0],
+            [1, 0, 1, 1],
+            [1, 0, 1, 1],
             [1, 1, 1, 0]]
         )
         self.overlap_time = (
