@@ -20,7 +20,7 @@ class Controller:
         self.stance_params = StanceParams()
         self.gait_params = GaitParams()
         self.movement_reference = MovementReference()
-        self.smoothed_yaw = 0.0 # for REST mode only        
+        self.smoothed_yaw = 0.0 # for REST mode only
 
         self.previous_state = BehaviorState.REST
         self.state = BehaviorState.REST
@@ -42,7 +42,7 @@ def step(
     ticks, foot_locations, swing_params, stance_params, gait_params, movement_reference
 ):
     """Calculate the desired foot locations for the next timestep
-    
+
     Parameters
     ----------
     ticks : int
@@ -57,7 +57,7 @@ def step(
         Gait parameters object.
     movement_reference : MovementReference
         Movement reference object.
-    
+
     Returns
     -------
     Numpy array (3, 4)
@@ -91,7 +91,7 @@ def step(
 
 def step_controller(controller, robot_config, quat_orientation):
     """Steps the controller forward one timestep
-    
+
     Parameters
     ----------
     controller : Controller
@@ -115,7 +115,7 @@ def step_controller(controller, robot_config, quat_orientation):
         #     @ controller.foot_locations
         # )
         # Disable joystick-based pitch and roll for trotting with IMU feedback
-        foot_locations = controller.foot_locations  
+        foot_locations = controller.foot_locations
 
         # Construct foot rotation matrix to compensate for body tilt
         (roll, pitch, yaw) = quat2euler(quat_orientation)
@@ -126,7 +126,7 @@ def step_controller(controller, robot_config, quat_orientation):
         rmat = euler2mat(roll_compensation, pitch_compensation, 0)
 
         foot_locations = rmat.T @ foot_locations
-        
+
         controller.joint_angles = four_legs_inverse_kinematics(
             foot_locations, robot_config
         )
@@ -134,16 +134,24 @@ def step_controller(controller, robot_config, quat_orientation):
     elif controller.state == BehaviorState.HOP:
         hop_foot_locations = (
              controller.stance_params.default_stance
-             + np.array([0, 0, -0.10])[:, np.newaxis]
+             + np.array([0, 0, -0.12])[:, np.newaxis]
+        )
+        controller.joint_angles = four_legs_inverse_kinematics(
+            hop_foot_locations, robot_config
+        )
+        hop_foot_locations = (
+             controller.stance_params.default_stance
+             + np.array([0, 0, .04])[:, np.newaxis]
         )
         controller.joint_angles = four_legs_inverse_kinematics(
             hop_foot_locations, robot_config
         )
 
+
     elif controller.state == BehaviorState.REST:
         if controller.previous_state != BehaviorState.REST:
             controller.smoothed_yaw = 0
-        
+
         yaw_factor = -0.25
         controller.smoothed_yaw += controller.gait_params.dt * clipped_first_order_filter(controller.smoothed_yaw, controller.movement_reference.wz_ref * yaw_factor, 1.5, 0.25)
         # Set the foot locations to the default stance plus the standard height
@@ -155,13 +163,13 @@ def step_controller(controller, robot_config, quat_orientation):
         rotated_foot_locations = (
             euler2mat(
                 controller.movement_reference.roll, controller.movement_reference.pitch, controller.smoothed_yaw
-            ) 
+            )
             @ controller.foot_locations
         )
         controller.joint_angles = four_legs_inverse_kinematics(
             rotated_foot_locations, robot_config
         )
-    
+
     controller.ticks += 1
     controller.previous_state = controller.state
 

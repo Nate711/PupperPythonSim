@@ -57,15 +57,16 @@ def get_input(user_input_obj, do_print=False):
                 user_input_obj.current_state = BehaviorState.REST
             elif user_input_obj.previous_state == BehaviorState.REST:
                 user_input_obj.current_state = BehaviorState.TROT
-        
+
         # Check if requesting a state transition to hopping, from trotting or resting
         if user_input_obj.hop_toggle == 1 and user_input_obj.previous_hop_toggle == 0:
             if user_input_obj.current_state == BehaviorState.HOP:
-                user_input_obj.current_state = BehaviorState.REST
+                user_input_obj.current_state = BehaviorState.FINISHHOP
             elif user_input_obj.current_state == BehaviorState.REST:
                 user_input_obj.current_state = BehaviorState.HOP
-                user_input_obj.hop_begin_time = time.time()
-        
+            elif user_input_obj.current_state == BehaviorState.FINISHHOP:
+                user_input_obj.current_state == BehaviorState.REST
+
         # Update previous values for toggles and state
         user_input_obj.previous_state = user_input_obj.current_state
         user_input_obj.previous_gait_toggle = user_input_obj.gait_toggle
@@ -90,7 +91,7 @@ def update_controller(controller, user_input_obj):
     controller.movement_reference.pitch += message_dt * pitch_rate
 
     controller.state = user_input_obj.current_state
-    
+
     # Note this is negative since it is the feet relative to the body
     controller.movement_reference.z_ref -= (
         controller.stance_params.z_speed * message_dt * user_input_obj.stance_movement
