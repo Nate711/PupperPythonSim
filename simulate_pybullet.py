@@ -39,6 +39,17 @@ def parallel_to_serial_joint_angles(joint_matrix):
     return temp
 
 
+# Create environment objects
+PUPPER_CONFIG = PupperConfig()
+PUPPER_CONFIG.XML_IN = "pupper_pybullet.xml"
+PUPPER_CONFIG.XML_OUT = "pupper_pybullet_out.xml"
+
+ENVIRONMENT_CONFIG = EnvironmentConfig()
+SOLVER_CONFIG = SolverConfig()
+
+# Initailize MuJoCo
+PupperXMLParser.Parse(PUPPER_CONFIG, ENVIRONMENT_CONFIG, SOLVER_CONFIG)
+
 # Set up PyBullet Simulator
 physicsClient = p.connect(p.GUI)  # or p.DIRECT for non-graphical version
 p.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
@@ -54,18 +65,6 @@ for i in range(numjoints):
     print(p.getJointInfo(pupperId[1], i))
 
 joint_indices = list(range(0, 24, 2))
-
-# Create environment objects
-PUPPER_CONFIG = PupperConfig()
-PUPPER_CONFIG.XML_IN = "pupper_pybullet.xml"
-PUPPER_CONFIG.XML_OUT = "pupper_pybullet_out.xml"
-
-
-ENVIRONMENT_CONFIG = EnvironmentConfig()
-SOLVER_CONFIG = SolverConfig()
-
-# Initailize MuJoCo
-PupperXMLParser.Parse(PUPPER_CONFIG, ENVIRONMENT_CONFIG, SOLVER_CONFIG)
 
 # Create controller
 robot_config = PupperConfig()
@@ -88,11 +87,11 @@ controller.gait_params.contact_phases = np.array(
 )
 controller.swing_params.z_clearance = 0.03
 controller.movement_reference.v_xy_ref = np.array([0.10, 0.0])
-controller.movement_reference.wz_ref = 0.5
+# controller.movement_reference.wz_ref = 0.5
 
 # To account for the fact that the CoM of the robot is a little behind the geometric center, 
 # put the robot feet a little behind the geometric center to try to match the actual CoM
-controller.stance_params.x_shift = -0.01
+# controller.stance_params.x_shift = -0.01
 
 (hey, now) = (0, 0)
 
@@ -108,8 +107,12 @@ for steps in range(timesteps):
         hey = time.time()
         last_control_update = simluated_time_elapsed
 
+        (pos, q_scalar_last) = p.getBasePositionAndOrientation(1)
+        q_corrected = (q_scalar_last[3], q_scalar_last[0], q_scalar_last[1], q_scalar_last[2])
+        # print("Orientation: ", q_corrected)
+
         # Calculate the next joint angle commands
-        step_controller(controller, robot_config)
+        step_controller(controller, robot_config, q_corrected)
 
         # Convert the joint angles from the parallel linkage to the simulated serial linkage
         serial_joint_angles = parallel_to_serial_joint_angles(
@@ -122,15 +125,17 @@ for steps in range(timesteps):
             jointIndices=joint_indices,
             controlMode=p.POSITION_CONTROL,
             targetPositions=list(serial_joint_angles.T.reshape(12)),
-            # positionGains=[1]*12,
-            # velocityGains=[1]*12,
-            forces=[4] * 12,
+            positionGains=[0.25]*12,
+            velocityGains=[0.5]*12,
+            forces=[10] * 12,
         )
 
         now = time.time()
 
     # Simulate physics for 1/240 seconds (1/240 is the default timestep)
     p.stepSimulation()
+
+    # time.sleep(0.01)
 
     # Performance testing
     elapsed = time.time() - start
