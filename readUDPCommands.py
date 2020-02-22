@@ -28,9 +28,9 @@ def turn_degrees(pi_board, pwm_params, servo_params, controller, speed, degrees)
     turn_radians(pi_board, pwm_params, servo_params, controller, speed, degrees * np.pi / 180)
 
 
-def turn_for_time(pi_board, pwm_params, servo_params, controller, speed, time):
+def turn_for_time(pi_board, pwm_params, servo_params, controller, speed, time_len):
     start_time = time.time()
-    while time.time() - start_time < time:
+    while time.time() - start_time < time_len:
         controller.movement_reference.v_xy_ref = np.array([0.0, 0.00])
         controller.movement_reference.wz_ref = speed
         step_controller(controller)
