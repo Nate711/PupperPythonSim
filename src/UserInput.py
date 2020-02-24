@@ -77,10 +77,7 @@ def get_input(user_input_obj, do_print=False):
             print("UDP Timed out")
 
 
-def update_controller(controller, user_input_obj):
-    stay_go_port = 3500
-    stay_go_sub = UDPComms.Subscriber(stay_go_port)
-
+def update_controller(controller, user_input_obj, stay_go_sub):
     soft_danger = 1.0
     try:
         status = stay_go_sub.get()

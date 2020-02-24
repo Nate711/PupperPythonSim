@@ -64,6 +64,8 @@ def main():
     print("z clearance: ", controller.swing_params.z_clearance)
     print("x shift: ", controller.stance_params.x_shift)
 
+    stay_go_port = 3500
+    stay_go_sub = UDPComms.Subscriber(stay_go_port)
     # Wait until the activate button has been pressed
     while True:
         print("Waiting for L1 to activate robot.")
@@ -89,7 +91,7 @@ def main():
             else:
                 user_input.last_activate = user_input.activate
 
-            update_controller(controller, user_input)
+            update_controller(controller, user_input, stay_go_sub)
 
             # Read imu data. Orientation will be None if no data was available
             quat_orientation = imu.read_orientation()
