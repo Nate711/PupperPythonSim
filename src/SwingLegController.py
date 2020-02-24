@@ -6,7 +6,7 @@ def raibert_touchdown_locations(
     swing_params, stance_params, gait_params, movement_reference
 ):
     """[summary]
-    
+
     Parameters
     ----------
     swing_params : [type]
@@ -39,7 +39,7 @@ def raibert_touchdown_location(
     leg_index, swing_params, stance_params, gait_params, movement_reference
 ):
     """[summary]
-    
+
     Parameters
     ----------
     leg_index : [type]
@@ -52,7 +52,7 @@ def raibert_touchdown_location(
         [description]
     movement_reference : [type]
         [description]
-    
+
     Returns
     -------
     [type]
@@ -77,7 +77,7 @@ def raibert_touchdown_location(
 
 def swing_height(swing_phase, swing_params, triangular=True):
     """[summary]
-    
+
     Parameters
     ----------
     swing_phase : [type]
@@ -110,7 +110,7 @@ def swing_foot_location(
     movement_reference,
 ):
     """[summary]
-    
+
     Parameters
     ----------
     swing_prop : [type]
@@ -127,7 +127,7 @@ def swing_foot_location(
         [description]
     movement_reference : [type]
         [description]
-    
+
     Returns
     -------
     [type]
@@ -139,8 +139,16 @@ def swing_foot_location(
     touchdown_location = raibert_touchdown_location(
         leg_index, swing_params, stance_params, gait_params, movement_reference
     )
+
+    #XY code
     time_left = gait_params.dt * gait_params.swing_ticks * (1.0 - swing_prop)
-    v = (touchdown_location - foot_location) / time_left * np.array([1, 1, 0])
+    if swing_prop < .1 || swing prop > .9:
+        v = -(touchdown_location - foot_location) / time_left * np.array([1, 1, 0])
+    else:
+        v = (touchdown_location - foot_location) / time_left * np.array([1, 1, 0])
+
     delta_foot_location = v * gait_params.dt
+
+
     z_vector = np.array([0, 0, swing_height_ + movement_reference.z_ref])
     return foot_location * np.array([1, 1, 0]) + z_vector + delta_foot_location
