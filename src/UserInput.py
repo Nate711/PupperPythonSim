@@ -78,6 +78,18 @@ def get_input(user_input_obj, do_print=False):
 
 
 def update_controller(controller, user_input_obj):
+    stay_go_port = 3500
+    stay_go_sub = UDPComms.Subscriber(stay_go_port)
+
+    soft_danger = 1.0
+    try:
+        status = stay_go_sub.get()
+        soft_danger = status["soft_danger"]
+    
+    except UDPComms.timeout:
+        print ("timed out waiting for go-no-go")
+
+    
     controller.movement_reference.v_xy_ref = np.array(
         [user_input_obj.x_vel, user_input_obj.y_vel]
     )
