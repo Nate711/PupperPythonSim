@@ -90,7 +90,7 @@ def update_controller(controller, user_input_obj):
         print ("timed out waiting for go-no-go")
 
     
-    controller.movement_reference.v_xy_ref = np.array(
+    controller.movement_reference.v_xy_ref = soft_danger * np.array(
         [user_input_obj.x_vel, user_input_obj.y_vel]
     )
     controller.movement_reference.wz_ref = user_input_obj.yaw_rate
