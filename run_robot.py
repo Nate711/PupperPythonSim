@@ -20,7 +20,7 @@ from src.UserInput import UserInputs, get_input, update_controller
 
 
 def start_pigpiod():
-    print("Starting pigpiod...")    
+    print("Starting pigpiod...")
     subprocess.Popen(["sudo", "pigpiod"])
     time.sleep(2)
     print("Done.")
@@ -93,9 +93,11 @@ def main():
 
             # Read imu data. Orientation will be None if no data was available
             quat_orientation = imu.read_orientation()
-
+            #print(quat_orientation)
+            #quat_orientation = np.array([1, 0, 0, 0])
             # Step the controller forward by dt
             step_controller(controller, robot_config, quat_orientation)
+
 
             # Update the pwm widths going to the servos
             send_servo_commands(pi_board, pwm_params, servo_params, controller.joint_angles)

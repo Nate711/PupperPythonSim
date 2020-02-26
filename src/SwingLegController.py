@@ -142,10 +142,12 @@ def swing_foot_location(
 
     #XY code
     time_left = gait_params.dt * gait_params.swing_ticks * (1.0 - swing_prop)
-    #if swing_prop < 0.1 or swing_prop > 0.9:
-    #    v = -(touchdown_location - foot_location) / time_left * np.array([1, 1, 0])
-    #else:
     v = (touchdown_location - foot_location) / time_left * np.array([1, 1, 0])
+    v_body = movement_reference.v_xy_ref
+    if swing_prop < 0.3 or swing_prop > 0.7:
+        v = np.array([-v_body[0], -v_body[1], 0])
+    else:
+        v = (touchdown_location - foot_location) / time_left * np.array([1, 1, 0])
 
     delta_foot_location = v * gait_params.dt
 

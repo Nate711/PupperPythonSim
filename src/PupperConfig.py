@@ -142,10 +142,10 @@ class GaitParams:
             [1, 1, 1, 0]]
         )
         self.overlap_time = (
-            1  # duration of the phase where all four feet are on the ground
+            .1  # duration of the phase where all four feet are on the ground
         )
         self.swing_time = (
-            2  # duration of the phase when only two feet are on the ground
+            .2  # duration of the phase when only two feet are on the ground
         )
 
     @property
