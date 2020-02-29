@@ -38,7 +38,7 @@ Video of the robot following a QR code: https://www.youtube.com/watch?v=iyuJq_Pn
     - Clone the Pupper repository https://github.com/Nate711/PupperPythonSim/
     - Install requirements:
     ```shell
-    bash install_packages_robot.sh
+    sudo bash install_packages_robot.sh
     ```
 - Get the Pupper controller code
     - Clone the controller repo: https://github.com/stanfordroboticsclub/PupperCommand
@@ -108,10 +108,11 @@ brew link --overwrite gcc
 
 3. Install the python requirements:
 ```bash
-bash install_packages_sim.sh
+sudo bash install_packages_sim.sh
 ```
 
 ## Run MuJoCo Simulation
+(Sorry, the MuJoCo sim has not been updated in a while so does not currently work. You're welcome to update it to work with our other code though!)
 1. Run
 ```shell
 python3 simulate.py
