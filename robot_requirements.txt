@@ -1,4 +1,0 @@
-numpy
-scipy
-transforms3d
-pigpio

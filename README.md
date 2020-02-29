@@ -53,18 +53,13 @@ Video of the robot following a QR code: https://www.youtube.com/watch?v=iyuJq_Pn
     ```shell
     rw
     ```
-- In a separate shell, start the joystick publisher. These instructions are copied from: https://github.com/stanfordroboticsclub/PupperCommand/blob/master/README.md
-    ```shell
-    cd PupperCommand
-    sudo systemctl start ds4drv
-    sudo python3 joystick.py
-    ```
 - Now go into this repo's PupperPythonSim directory and run the robot code!
     ```shell
     cd PupperPythonSim
-    sudo python3 run_robot.py
+    sudo pigpiod
+    python3 run_robot.py
     ```
-    Sudo is needed so that the script can start the pigpio daemon.
+    If you already have the pigpio daemon running, you can ignore when ```sudo pigpiod``` says it can't initialize pigpiod.
 - You can interrupt and stop the program by pressing Control-C.
 - To turn off the servo motors, run
     ```shell
