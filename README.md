@@ -1,4 +1,6 @@
-# Pupper Robot: Python Simulation
+# Pupper Robot: Control & Simulation
+
+This repo has been replaced by: https://github.com/stanfordroboticsclub/stanfordquadruped
 
 ## Overview
 This repository contains Python code to run Pupper, a Raspberry Pi-based quadruped robot. In addition to the robot code, this repository also contains a wrapper to simulate the robot in MuJoCo or PyBullet using the same code that runs on the robot.
